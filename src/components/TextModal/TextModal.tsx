@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { propertyToDisplay } from "../../const/types";
 
 interface ImageModalProps {
-  selectedItem: any[];
+  selectedItem: any;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -23,6 +23,10 @@ const Overlay = styled.div`
 const ContentWrap = styled.div`
   max-width: 600px;
   margin: 0 auto;
+  overflow-y: scroll;
+  max-height: 90vh;
+
+
 `;
 const TextWrap = styled.div`
   background-color: #ffffff;
@@ -34,7 +38,41 @@ const TextWrap = styled.div`
   padding: 1rem;
 `;
 
+const Image = styled.img`
+  max-width: min(500px, 66vw);
+  max-height: min(300px, 66vh);
+  padding: 1rem;
+`;
+
+const ImageWrap = styled.div`
+  background-color: #d3c3c3ab;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+`;
+
 const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
+  const [urls, setUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const imagesNames: string[] = [];
+      for (let i = 0; i < selectedItem.imageCount; i++) {
+        imagesNames.push(selectedItem.dbId + "-" + i);
+      }
+      const res: string[] = [];
+      for (let i = 0; i < imagesNames.length; i++) {
+        const trueUrl = await getURL(imagesNames[i]);
+        res.push(trueUrl);
+      }
+      setUrls(res);
+    };
+    if (selectedItem !== undefined) {
+      fetch();
+    }
+  }, [selectedItem]);
   return (
     <>
       {selectedItem === undefined ? null : (
@@ -54,6 +92,11 @@ const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
                 ) : null;
               })}
             </TextWrap>
+            <ImageWrap>
+              {urls.map((item, index) => {
+                return <Image key={index} src={item} alt="item" />;
+              })}
+            </ImageWrap>
           </ContentWrap>
         </Overlay>
       )}

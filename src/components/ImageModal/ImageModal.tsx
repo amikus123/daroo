@@ -29,7 +29,6 @@ const ContentWrap = styled.div`
   max-width: 600px;
   margin: 0 auto;
   max-height: 90vh;
-
 `;
 const ImageWrap = styled.div`
   background-color: #d3c3c3ab;
