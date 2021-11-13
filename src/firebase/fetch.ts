@@ -1,5 +1,5 @@
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
-import { BaseItem } from "../const/types";
+import { BaseItem, Item } from "../const/types";
 import { db, storage } from "./main";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -27,6 +27,15 @@ export const updateDb = async (data: BaseItem, files: File[]) => {
     { merge: true }
   );
 };
+export const updateByDbId = async (data:Item) =>{
+  const itemRef = doc(db, "items", data.dbId);
+  const { location, category, name, description, count } = data;
+  await setDoc(
+    itemRef,
+    { location,category,name,description,count },
+    { merge: true }
+  );
+}
 
 export const getAll = async () => {
   const querySnapshot = await getDocs(collection(db, "items"));

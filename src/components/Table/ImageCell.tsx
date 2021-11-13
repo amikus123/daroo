@@ -9,7 +9,7 @@ const ImageCell = ({ rowData, dataKey, onClick, ...props }) => {
       <Button
         appearance="link"
         onClick={() => {
-          onClick && onClick(rowData.dbId, rowData.imageCount);
+          onClick && onClick(rowData.id);
         }}
       >
         {rowData.imageCount === 0 ? "No images" : `Show(${rowData.imageCount})`}

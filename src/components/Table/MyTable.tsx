@@ -9,7 +9,7 @@ import { Panel } from "rsuite";
 
 interface MyTableProps {
   passedData: Item[];
-  setImageNames: React.Dispatch<React.SetStateAction<any[]>>;
+  setShowText: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -17,15 +17,14 @@ type TableRow = Item & { id: string; status: "EDIT" | null };
 
 const addIds = (originalData: Item[]) => {
   const res: TableRow[] = originalData.map((item, index) => {
-    return { ...item, id: index + 1 + "", status: null };
+    return { ...item, id: index + "", status: null };
   });
-  console.log(res);
   return res;
 };
 
 const MyTable = ({
   passedData,
-  setImageNames,
+  setShowText,
   setSelectedIndex,
 }: MyTableProps) => {
   const [staticData, setStaticData] = useState<TableRow[]>(addIds(passedData));
@@ -33,12 +32,13 @@ const MyTable = ({
   const [sortType, setSortType] = useState<any>("");
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  // count of editing items, if it 0 
+  const [editingCout, setEditingCount] = useState(0);
+
   // click to show images
   useEffect(() => {
-    console.log(passedData, "new");
   }, [passedData]);
   useEffect(() => {
-    console.log("effect");
     if (staticData.length === 0) {
       setStaticData(addIds(passedData));
     } else {
@@ -75,7 +75,6 @@ const MyTable = ({
 
   const handleSortColumn = (sortColumn, sortType) => {
     setLoading(true);
-    console.log(sortColumn, sortType, "XD");
     setTimeout(() => {
       setLoading(false);
       setSortColumn(sortColumn);
@@ -93,20 +92,24 @@ const MyTable = ({
     setEditing(!editing);
     const nextData = Object.assign([], staticData);
     const activeItem = nextData.find((item) => item.id === id);
-    console.log(activeItem, nextData);
+    console.log(activeItem, nextData,"XD",editing);
+    // if we are about to save, 
+    if(editing){
+      // verify if item is correct
+    }
     activeItem.status = activeItem.status ? null : "EDIT";
+
     setStaticData(nextData);
   };
 
+
   const handleRowClick = (id: number) => {
+    setShowText(true);
     setSelectedIndex(id);
   };
-  const handleImageClick = (name: string, length: number) => {
-    const res: string[] = [];
-    for (let i = 0; i < length; i++) {
-      res.push(name + "-" + i);
-    }
-    setImageNames(res);
+  const handleImageClick = (id: number) => {
+    setShowText(false);
+    setSelectedIndex(id);
   };
 
   return (
@@ -119,7 +122,6 @@ const MyTable = ({
         onSortColumn={handleSortColumn}
         loading={loading}
         onRowClick={(data) => {
-          console.log(data);
         }}
       >
         <Column width={120} sortable>
@@ -175,6 +177,7 @@ const MyTable = ({
         <Column width={80}>
           <HeaderCell>Edit</HeaderCell>
           <ActionCell
+          staticData={staticData}
             dataKey="id"
             onClick={handleEditState}
             rowData={undefined}

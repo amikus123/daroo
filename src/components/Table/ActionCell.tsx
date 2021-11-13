@@ -1,22 +1,34 @@
 import { Button } from "rsuite";
 import { Cell } from "rsuite-table";
+import { updateByDbId } from "../../firebase/fetch";
+import { verify } from "./verify";
+interface ActionCellProps {}
 
-interface ActionCellProps{
-  
-}
+const ActionCell = ({ rowData, dataKey, onClick, staticData, ...props }) => {
+  // here we will update the state
 
-const ActionCell = ({ rowData, dataKey, onClick, ...props }) => {
   return (
-    <Cell {...props} style={{ padding: '6px' }}>
+    <Cell {...props} style={{ padding: "6px" }}>
       <Button
         appearance="link"
         onClick={() => {
-          onClick && onClick(rowData.id);
+          console.log(rowData, staticData, "Row");
+          const isDataCorrent = verify(rowData);
+          if (isDataCorrent) {
+            // update the state and db
+            onClick(rowData.id);
+            updateByDbId(rowData)
+          } else {
+            alert("zle dane");
+            // dont do the up
+          }
+
+          //
         }}
       >
-        {rowData.status === 'EDIT' ? 'Save' : 'Edit'}
+        {rowData.status === "EDIT" ? "Save" : "Edit"}
       </Button>
     </Cell>
   );
 };
-export default ActionCell
+export default ActionCell;

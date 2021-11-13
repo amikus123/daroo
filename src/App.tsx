@@ -2,28 +2,23 @@ import { useState, useEffect } from "react";
 import { CustomProvider } from "rsuite";
 import "rsuite-table/dist/css/rsuite-table.css";
 import MyForm from "./components/Form/MyForm";
-import ImageModal from "./components/ImageModal/ImageModal";
 import MyTable from "./components/Table/MyTable";
 import { getAll } from "./firebase/fetch";
 import styled from "styled-components";
-import TextModal from "./components/TextModal/TextModal";
+import ItemModal from "./components/ItemModal/ItemModal";
 
 const Wrap = styled.div`
-/* position:relative; */
+  /* position:relative; */
 `;
 const TableWrap = styled.div`
   margin: 0 auto;
   max-width: 1000px;
-  padding: 1rem;
-  & *{
-  overflow: visible;
-  z-index: 10;
-}
+
 `;
 const App = () => {
   const [data, setData] = useState([]);
-  const [imageNames, setImageNames] = useState<string[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showText, setShowText] = useState(false);
   useEffect(() => {
     const fetch = async () => {
       const res = await getAll();
@@ -36,10 +31,17 @@ const App = () => {
     <CustomProvider theme="light">
       <Wrap>
         <TableWrap>
-          <MyTable passedData={data} setImageNames={setImageNames}  setSelectedIndex={setSelectedIndex}/>
+          <MyTable
+            passedData={data}
+            setSelectedIndex={setSelectedIndex}
+            setShowText={setShowText}
+          />
         </TableWrap>
-        <ImageModal imageNames={imageNames} setImageNames={setImageNames} />
-        <TextModal  selectedItem={data[selectedIndex]} setSelectedIndex={setSelectedIndex}/>
+        <ItemModal
+          selectedItem={data[selectedIndex]}
+          setSelectedIndex={setSelectedIndex}
+          showText={showText}
+        />
         <MyForm />
       </Wrap>
     </CustomProvider>

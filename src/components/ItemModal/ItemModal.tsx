@@ -6,6 +6,7 @@ import { propertyToDisplay } from "../../const/types";
 interface ImageModalProps {
   selectedItem: any;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  showText:boolean
 }
 
 const Overlay = styled.div`
@@ -17,8 +18,7 @@ const Overlay = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
-  padding: 1rem;
+  z-index: 10;  padding: 1rem;
 `;
 const ContentWrap = styled.div`
   max-width: 600px;
@@ -53,7 +53,7 @@ const ImageWrap = styled.div`
   height: auto;
 `;
 
-const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
+const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ImageModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
           }}
         >
           <ContentWrap>
-            <TextWrap>
+            {showText?  <TextWrap>
               {Object.keys(selectedItem).map((key, index) => {
                 return propertyToDisplay[key] ? (
                   <p key={index}>
@@ -91,7 +91,8 @@ const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
                   </p>
                 ) : null;
               })}
-            </TextWrap>
+            </TextWrap> :null}
+           
             <ImageWrap>
               {urls.map((item, index) => {
                 return <Image key={index} src={item} alt="item" />;
@@ -104,4 +105,4 @@ const TextModal = ({ selectedItem, setSelectedIndex }: ImageModalProps) => {
   );
 };
 
-export default TextModal;
+export default ItemModal;
