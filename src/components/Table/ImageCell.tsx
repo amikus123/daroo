@@ -1,7 +1,6 @@
 import { Button } from "rsuite";
 import { Cell } from "rsuite-table";
 
-interface ActionCellProps {}
 
 const ImageCell = ({ rowData, dataKey, onClick, ...props }) => {
   return (

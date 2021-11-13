@@ -84,7 +84,7 @@ const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ImageModalProps) 
         >
           <ContentWrap>
             {showText?  <TextWrap>
-              {Object.keys(selectedItem).map((key, index) => {
+              {Object.keys(selectedItem).sort().map((key, index) => {
                 return propertyToDisplay[key] ? (
                   <p key={index}>
                     {propertyToDisplay[key]}: {selectedItem[key]}

@@ -2,7 +2,6 @@ import { Button } from "rsuite";
 import { Cell } from "rsuite-table";
 import { updateByDbId } from "../../firebase/fetch";
 import { verify } from "./verify";
-interface ActionCellProps {}
 
 const ActionCell = ({ rowData, dataKey, onClick, staticData, ...props }) => {
   // here we will update the state
@@ -13,10 +12,11 @@ const ActionCell = ({ rowData, dataKey, onClick, staticData, ...props }) => {
         appearance="link"
         onClick={() => {
           console.log(rowData, staticData, "Row");
+        
           const isDataCorrent = verify(rowData);
           if (isDataCorrent) {
             // update the state and db
-            onClick(rowData.id);
+            onClick(rowData.id,"");
             updateByDbId(rowData)
           } else {
             alert("zle dane");

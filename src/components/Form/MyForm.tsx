@@ -31,7 +31,7 @@ const Wrap = styled.div`
   flex-direction: row;
   @media (max-width: 800px) {
     flex-direction: column;
-  };
+  }
   justify-content: center;
   > * {
     margin: 0 1rem;
@@ -123,20 +123,17 @@ const MyForm = () => {
         >
           Clear form data
         </Button>
-        <Button onClick={() => updateDb(formValue,files)}>Upload</Button>
+        <Button
+          onClick={() => {
+            updateDb(formValue, files);
+            setFormValue(defaultFormValue);
+            alert("wyslano do bazy, odswiez zeby sprawdzic czy sie udalo");
+          }}
+        >
+          Upload
+        </Button>
       </ButtonToolbar>
     </MegaWrap>
   );
 };
 export default MyForm;
-
-/* <Form.Group controlId="checkbox">
-<Form.ControlLabel>Checkbox:</Form.ControlLabel>
-<Form.Control name="checkbox" accepter={CheckboxGroup} inline>
-  <Checkbox value="Node.js">Node.js</Checkbox>
-  <Checkbox value="Webpack">Webpack</Checkbox>
-  <Checkbox value="CSS3">CSS3</Checkbox>
-  <Checkbox value="Javascript">Javascript</Checkbox>
-  <Checkbox value="HTML5">HTML5</Checkbox>
-</Form.Control>
-</Form.Group> */

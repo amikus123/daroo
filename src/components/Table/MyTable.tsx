@@ -4,7 +4,6 @@ import { Item } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
-import styled from "styled-components";
 import { Panel } from "rsuite";
 
 interface MyTableProps {
@@ -32,10 +31,7 @@ const MyTable = ({
   const [sortType, setSortType] = useState<any>("");
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
-  // count of editing items, if it 0 
-  const [editingCout, setEditingCount] = useState(0);
-
-  // click to show images
+  const [editingCount,setEditingCount] = useState(0)
   useEffect(() => {
   }, [passedData]);
   useEffect(() => {

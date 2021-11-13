@@ -1,12 +1,9 @@
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
 import { BaseItem, Item } from "../const/types";
 import { db, storage } from "./main";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-// 'file' comes from the Blob or File API
-
-//
 
 const tryToUploadImg = async (file: any, fileName: string) => {
   const storageRef = ref(storage, fileName);
@@ -27,6 +24,7 @@ export const updateDb = async (data: BaseItem, files: File[]) => {
     { merge: true }
   );
 };
+
 export const updateByDbId = async (data:Item) =>{
   const itemRef = doc(db, "items", data.dbId);
   const { location, category, name, description, count } = data;
@@ -52,9 +50,6 @@ export const getURL = async (imageName: string) => {
     const url = await   getDownloadURL(ref(storage, imageName))
     const xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-    };
     xhr.open("GET", url);
     xhr.send();
     console.log(url, "url");
