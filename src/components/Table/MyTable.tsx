@@ -4,11 +4,15 @@ import { Item } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
+import styled from "styled-components";
+import { Panel } from "rsuite";
 
 interface MyTableProps {
   passedData: Item[];
   setImageNames: React.Dispatch<React.SetStateAction<any[]>>;
+  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
 }
+
 type TableRow = Item & { id: string; status: "EDIT" | null };
 
 const addIds = (originalData: Item[]) => {
@@ -19,7 +23,11 @@ const addIds = (originalData: Item[]) => {
   return res;
 };
 
-const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
+const MyTable = ({
+  passedData,
+  setImageNames,
+  setSelectedIndex,
+}: MyTableProps) => {
   const [staticData, setStaticData] = useState<TableRow[]>(addIds(passedData));
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<any>("");
@@ -76,14 +84,12 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
   };
 
   const handleChange = (id: string, key: string, value: any) => {
-    console.log("change");
     const nextData = Object.assign([], staticData);
     nextData.find((item) => item.id === id)[key] = value;
     setStaticData(nextData);
   };
 
   const handleEditState = (id: string) => {
-    console.log("edut ");
     setEditing(!editing);
     const nextData = Object.assign([], staticData);
     const activeItem = nextData.find((item) => item.id === id);
@@ -92,6 +98,9 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
     setStaticData(nextData);
   };
 
+  const handleRowClick = (id: number) => {
+    setSelectedIndex(id);
+  };
   const handleImageClick = (name: string, length: number) => {
     const res: string[] = [];
     for (let i = 0; i < length; i++) {
@@ -99,11 +108,11 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
     }
     setImageNames(res);
   };
+
   return (
-    <>
+    <Panel header="Przedmioty" bordered bodyFill>
       <Table
-        className=".rs-theme-dark"
-        height={420}
+        autoHeight={true}
         data={staticData}
         sortColumn={sortColumn}
         sortType={sortType}
@@ -113,52 +122,58 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
           console.log(data);
         }}
       >
-        <Column flexGrow={1} sortable>
-          <HeaderCell>Lokacja</HeaderCell>
-          <EditCell
-            dataKey="location"
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column flexGrow={1} sortable>
-          <HeaderCell>Kategoria</HeaderCell>
-          <EditCell
-            dataKey="category"
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column flexGrow={1} sortable>
+        <Column width={120} sortable>
           <HeaderCell>Nazwa</HeaderCell>
           <EditCell
+            handleClick={handleRowClick}
             dataKey="name"
             onChange={handleChange}
             rowData={undefined}
           />
         </Column>
 
-        <Column flexGrow={1} sortable>
-          <HeaderCell>Opis</HeaderCell>
-          <EditCell
-            dataKey="description"
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-        <Column flexGrow={1} sortable>
+        <Column width={80} sortable>
           <HeaderCell>Ilosc</HeaderCell>
           <EditCell
+            handleClick={handleRowClick}
             dataKey="count"
             onChange={handleChange}
             rowData={undefined}
           />
         </Column>
 
-        <Column flexGrow={1}>
+        <Column width={120} sortable>
+          <HeaderCell>Miejsce</HeaderCell>
+          <EditCell
+            dataKey="location"
+            handleClick={handleRowClick}
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
+
+        <Column width={120} sortable>
+          <HeaderCell>Kategoria</HeaderCell>
+          <EditCell
+            dataKey="category"
+            handleClick={handleRowClick}
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
+
+        <Column width={200} sortable>
           <HeaderCell>Opis</HeaderCell>
+          <EditCell
+            dataKey="description"
+            handleClick={handleRowClick}
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
+
+        <Column width={80}>
+          <HeaderCell>Edit</HeaderCell>
           <ActionCell
             dataKey="id"
             onClick={handleEditState}
@@ -166,8 +181,8 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
           />
         </Column>
 
-        <Column flexGrow={1}>
-          <HeaderCell>Show images</HeaderCell>
+        <Column width={80}>
+          <HeaderCell>Images</HeaderCell>
           <ImageCell
             dataKey="imageCount"
             onClick={handleImageClick}
@@ -175,7 +190,7 @@ const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
           />
         </Column>
       </Table>
-    </>
+    </Panel>
   );
 };
 

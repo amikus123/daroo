@@ -8,9 +8,38 @@ interface ImageModalProps {
 }
 
 const Image = styled.img`
-  width: 500px;
-  height: 500px;
+  max-width: min(500px, 66vw);
+  max-height: min(300px, 66vh);
+  padding: 1rem;
 `;
+const Overlay = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000060;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  padding: 1rem;
+`;
+const ContentWrap = styled.div`
+  overflow-y: scroll;
+  max-width: 600px;
+  margin: 0 auto;
+  max-height: 90vh;
+
+`;
+const ImageWrap = styled.div`
+  background-color: #d3c3c3ab;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+`;
+
 const ImageModal = ({ imageNames, setImageNames }: ImageModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
 
@@ -26,14 +55,20 @@ const ImageModal = ({ imageNames, setImageNames }: ImageModalProps) => {
     fetch();
   }, [imageNames]);
   return (
-    <div>
-      {JSON.stringify(imageNames)}
-      <div>
-        {urls.map((item, index) => {
-          return <Image key={index} src={item} alt="item" />;
-        })}
-      </div>
-    </div>
+    <Overlay
+      style={{ display: urls.length === 0 ? "none" : "block" }}
+      onClick={() => {
+        setUrls([]);
+      }}
+    >
+      <ContentWrap>
+        <ImageWrap>
+          {urls.map((item, index) => {
+            return <Image key={index} src={item} alt="item" />;
+          })}
+        </ImageWrap>
+      </ContentWrap>
+    </Overlay>
   );
 };
 

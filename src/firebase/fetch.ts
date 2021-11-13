@@ -16,8 +16,8 @@ const tryToUploadImg = async (file: any, fileName: string) => {
 };
 
 export const updateDb = async (data: BaseItem, files: File[]) => {
-  const itemRef = doc(db, "items", data.description);
   const dbId = uuidv4();
+  const itemRef = doc(db, "items", dbId);
   for (let i = 0; i < files.length; i++) {
     await tryToUploadImg(files[i], dbId + "-" + i);
   }
@@ -33,7 +33,6 @@ export const getAll = async () => {
   const res = [];
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
     res.push(doc.data());
   });
   return res;

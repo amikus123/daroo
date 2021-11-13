@@ -5,7 +5,6 @@ import {
   Radio,
   ButtonToolbar,
   Button,
-  Uploader,
   InputNumber,
 } from "rsuite";
 import { BaseItem } from "../../const/types";
@@ -30,6 +29,9 @@ const MegaWrap = styled.div`
 const Wrap = styled.div`
   display: flex;
   flex-direction: row;
+  @media (max-width: 800px) {
+    flex-direction: column;
+  };
   justify-content: center;
   > * {
     margin: 0 1rem;
@@ -54,7 +56,6 @@ const MyForm = () => {
   }, [files]);
   return (
     <MegaWrap>
-      {JSON.stringify(files)}
       <Wrap>
         <Form
           formValue={formValue}
@@ -67,12 +68,12 @@ const MyForm = () => {
           </Form.Group>
 
           <Form.Group controlId="count">
-            <Form.ControlLabel>Ilosc </Form.ControlLabel>
+            <Form.ControlLabel>Ilosc:</Form.ControlLabel>
             <Form.Control name="count" accepter={InputNumber} />
           </Form.Group>
 
           <Form.Group controlId="description">
-            <Form.ControlLabel>Opis:(musi byc unikalny)</Form.ControlLabel>
+            <Form.ControlLabel>Opis:</Form.ControlLabel>
             <Form.Control name="description" />
           </Form.Group>
         </Form>

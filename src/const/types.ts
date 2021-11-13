@@ -7,3 +7,12 @@ export interface BaseItem {
 }
 
 export type Item = BaseItem & { imageCount: number; dbId: string };
+
+
+export enum propertyToDisplay  {
+"count"="Ilość",
+"location"="Lokalizacja",
+"name"="Nazwa",
+"description"="Opis",
+"category"="Kategoria"
+}
