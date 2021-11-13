@@ -8,15 +8,16 @@ import {
   Uploader,
   InputNumber,
 } from "rsuite";
-import { FormItem } from "../../const/types";
+import { BaseItem } from "../../const/types";
 import styled from "styled-components";
-const defaultFormValue: FormItem = {
+import { updateDb } from "../../firebase/fetch";
+import FileInput from "../FileInput";
+const defaultFormValue: BaseItem = {
   location: "PP",
   category: "odzysk",
   name: "Płyta główna",
   description: "płyta główna awz200",
   count: 1,
-  images: [],
 };
 
 const MegaWrap = styled.div`
@@ -35,13 +36,25 @@ const Wrap = styled.div`
     padding: 1rem;
   }
 `;
+const InputWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  > * {
+    padding: 1rem;
+  }
+`;
 const MyForm = () => {
   const [formValue, setFormValue] = useState<any>(defaultFormValue);
+  const [files, setFiles] = useState<any>([]);
   useEffect(() => {
     console.log(formValue);
   }, [formValue]);
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
   return (
     <MegaWrap>
+      {JSON.stringify(files)}
       <Wrap>
         <Form
           formValue={formValue}
@@ -52,7 +65,6 @@ const MyForm = () => {
             <Form.ControlLabel>Nazwa:</Form.ControlLabel>
             <Form.Control name="name" />
           </Form.Group>
-    
 
           <Form.Group controlId="count">
             <Form.ControlLabel>Ilosc </Form.ControlLabel>
@@ -60,7 +72,7 @@ const MyForm = () => {
           </Form.Group>
 
           <Form.Group controlId="description">
-            <Form.ControlLabel>Opis:</Form.ControlLabel>
+            <Form.ControlLabel>Opis:(musi byc unikalny)</Form.ControlLabel>
             <Form.Control name="description" />
           </Form.Group>
         </Form>
@@ -88,18 +100,29 @@ const MyForm = () => {
                 <Radio value="sprawne">Sprawne</Radio>
               </Form.Control>
             </Form.Group>
-            <Form.Group controlId="images">
-              <Form.ControlLabel>Uploader:</Form.ControlLabel>
-              <Form.Control name="images" accepter={Uploader} />
-            </Form.Group>
           </div>
         </Form>
+        <Form
+          formValue={formValue}
+          onChange={(formValue) => setFormValue(formValue)}
+          style={{ padding: "1rem" }}
+        >
+          <InputWrap>
+            <FileInput value={files} onChange={setFiles} />
+          </InputWrap>
+        </Form>
       </Wrap>
+
       <ButtonToolbar>
-        <Button onClick={() => setFormValue(defaultFormValue)}>
+        <Button
+          onClick={() => {
+            setFormValue(defaultFormValue);
+            setFiles([]);
+          }}
+        >
           Clear form data
         </Button>
-        <Button onClick={() => console.log(1)}>Upload</Button>
+        <Button onClick={() => updateDb(formValue,files)}>Upload</Button>
       </ButtonToolbar>
     </MegaWrap>
   );

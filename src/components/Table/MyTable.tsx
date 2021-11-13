@@ -3,9 +3,11 @@ import { Table, Column, HeaderCell } from "rsuite-table";
 import { Item } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
+import ImageCell from "./ImageCell";
 
 interface MyTableProps {
   passedData: Item[];
+  setImageNames: React.Dispatch<React.SetStateAction<any[]>>;
 }
 type TableRow = Item & { id: string; status: "EDIT" | null };
 
@@ -17,7 +19,7 @@ const addIds = (originalData: Item[]) => {
   return res;
 };
 
-const MyTable = ({ passedData }: MyTableProps) => {
+const MyTable = ({ passedData, setImageNames }: MyTableProps) => {
   const [staticData, setStaticData] = useState<TableRow[]>(addIds(passedData));
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<any>("");
@@ -25,9 +27,16 @@ const MyTable = ({ passedData }: MyTableProps) => {
   const [editing, setEditing] = useState(false);
   // click to show images
   useEffect(() => {
+    console.log(passedData, "new");
+  }, [passedData]);
+  useEffect(() => {
     console.log("effect");
-    getData(staticData);
-  }, [sortColumn, sortType, editing]);
+    if (staticData.length === 0) {
+      setStaticData(addIds(passedData));
+    } else {
+      getData(staticData);
+    }
+  }, [sortColumn, sortType, editing, passedData]);
 
   const getData = (data: TableRow[]) => {
     let copy = [...data];
@@ -83,64 +92,90 @@ const MyTable = ({ passedData }: MyTableProps) => {
     setStaticData(nextData);
   };
 
+  const handleImageClick = (name: string, length: number) => {
+    const res: string[] = [];
+    for (let i = 0; i < length; i++) {
+      res.push(name + "-" + i);
+    }
+    setImageNames(res);
+  };
   return (
-    <Table
-      className=".rs-theme-dark"
-      height={420}
-      data={staticData}
-      sortColumn={sortColumn}
-      sortType={sortType}
-      onSortColumn={handleSortColumn}
-      loading={loading}
-      onRowClick={(data) => {
-        console.log(data);
-      }}
-    >
-      <Column width={200} sortable >
-        <HeaderCell >Lokacja</HeaderCell>
-        <EditCell
-          dataKey="location"
-          onChange={handleChange}
-          rowData={undefined}
-        />
-      </Column>
+    <>
+      <Table
+        className=".rs-theme-dark"
+        height={420}
+        data={staticData}
+        sortColumn={sortColumn}
+        sortType={sortType}
+        onSortColumn={handleSortColumn}
+        loading={loading}
+        onRowClick={(data) => {
+          console.log(data);
+        }}
+      >
+        <Column flexGrow={1} sortable>
+          <HeaderCell>Lokacja</HeaderCell>
+          <EditCell
+            dataKey="location"
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
 
-      <Column width={200} sortable>
-        <HeaderCell>Kategoria</HeaderCell>
-        <EditCell
-          dataKey="category"
-          onChange={handleChange}
-          rowData={undefined}
-        />
-      </Column>
+        <Column flexGrow={1} sortable>
+          <HeaderCell>Kategoria</HeaderCell>
+          <EditCell
+            dataKey="category"
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
 
-      <Column width={300} sortable>
-        <HeaderCell>Nazwa</HeaderCell>
-        <EditCell dataKey="name" onChange={handleChange} rowData={undefined} />
-      </Column>
+        <Column flexGrow={1} sortable>
+          <HeaderCell>Nazwa</HeaderCell>
+          <EditCell
+            dataKey="name"
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
 
-      <Column flexGrow={1} sortable>
-        <HeaderCell>Opis</HeaderCell>
-        <EditCell
-          dataKey="description"
-          onChange={handleChange}
-          rowData={undefined}
-        />
-      </Column>
-      <Column flexGrow={1} sortable>
-        <HeaderCell>Ilosc</HeaderCell>
-        <EditCell dataKey="count" onChange={handleChange} rowData={undefined} />
-      </Column>
+        <Column flexGrow={1} sortable>
+          <HeaderCell>Opis</HeaderCell>
+          <EditCell
+            dataKey="description"
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
+        <Column flexGrow={1} sortable>
+          <HeaderCell>Ilosc</HeaderCell>
+          <EditCell
+            dataKey="count"
+            onChange={handleChange}
+            rowData={undefined}
+          />
+        </Column>
 
-      <Column flexGrow={1}>
-        <HeaderCell>Opis</HeaderCell>
-        <ActionCell
-          dataKey="id"
-          onClick={handleEditState}
-          rowData={undefined}
-        />
-      </Column>
-    </Table>
+        <Column flexGrow={1}>
+          <HeaderCell>Opis</HeaderCell>
+          <ActionCell
+            dataKey="id"
+            onClick={handleEditState}
+            rowData={undefined}
+          />
+        </Column>
+
+        <Column flexGrow={1}>
+          <HeaderCell>Show images</HeaderCell>
+          <ImageCell
+            dataKey="imageCount"
+            onClick={handleImageClick}
+            rowData={undefined}
+          />
+        </Column>
+      </Table>
+    </>
   );
 };
 
