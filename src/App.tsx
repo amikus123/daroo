@@ -8,6 +8,7 @@ import styled from "styled-components";
 import ItemModal from "./components/ItemModal/ItemModal";
 import { Item, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
+import { getItemWithDbId } from "./components/Table/helpers";
 
 const Wrap = styled.div`
   /* position:relative; */
@@ -24,7 +25,7 @@ const App = () => {
   // data initiallly fetched from db
   const [tableData, setTableData] = useState<RowData[]>([]);
   // used in Item Modal
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedDbId, setSelectedDbId] = useState("");
   const [showText, setShowText] = useState(false);
   // used in  Status Modal
   const [snackbarValue, setSnackbarValue] = useState<SnackbarType>({
@@ -69,14 +70,14 @@ const App = () => {
           <MyTable
             tableData={tableData}
             setTableData={setTableData}
-            setSelectedIndex={setSelectedIndex}
+            setSelectedIndex={setSelectedDbId}
             setShowText={setShowText}
             updateSnackbar={updateSnackbar}
           />
         </TableWrap>
         <ItemModal
-          selectedItem={tableData[selectedIndex]}
-          setSelectedIndex={setSelectedIndex}
+          selectedItem={getItemWithDbId(tableData,selectedDbId)}
+          setSelectedIndex={setSelectedDbId}
           showText={showText}
         />
         <Snackbar snackbarValue={snackbarValue} />

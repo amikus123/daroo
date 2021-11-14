@@ -4,6 +4,18 @@ import { RowData } from "../../const/types";
 export const isPositiveInteger = (n: string | number) => {
   return !isNaN(Number(n));
 };
+export const getItemWithDbId = (data:RowData[],dbId :string)  :null | RowData=>{
+  let res:RowData|null = null
+  if(dbId !==""){
+
+    data.forEach(item=>{
+      if(item.dbId === dbId){
+        res = item
+      }
+    })
+  }
+  return res
+}
 export const verifyItemChange = (rowData: RowData) => {
   // check if passed item has corret values
   const { location, category, name, description, count } = rowData;

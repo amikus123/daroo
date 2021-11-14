@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getURL } from "../../firebase/fetch";
 import styled from "styled-components";
-import { propertyToDisplay } from "../../const/types";
+import { propertyToDisplay, RowData } from "../../const/types";
 
 interface ItemModalProps {
-  selectedItem: any;
-  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
-  showText:boolean
+  selectedItem: RowData | null;
+  setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
+  showText: boolean;
 }
 
 const Overlay = styled.div`
@@ -18,7 +18,8 @@ const Overlay = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;  padding: 1rem;
+  z-index: 10;
+  padding: 1rem;
 `;
 const ContentWrap = styled.div`
   max-width: 600px;
@@ -51,7 +52,11 @@ const ImageWrap = styled.div`
   height: auto;
 `;
 
-const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ItemModalProps) => {
+const ItemModal = ({
+  selectedItem,
+  setSelectedIndex,
+  showText,
+}: ItemModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
 
   useEffect(() => {
@@ -67,30 +72,34 @@ const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ItemModalProps) =
       }
       setUrls(res);
     };
-    if (selectedItem !== undefined) {
+    if (selectedItem !== null) {
       fetch();
     }
   }, [selectedItem]);
   return (
     <>
-      {selectedItem === undefined ? null : (
+      {selectedItem === null ? null : (
         <Overlay
           style={{ display: selectedItem === undefined ? "none" : "block" }}
           onClick={() => {
-            setSelectedIndex(-1);
+            setSelectedIndex("");
           }}
         >
           <ContentWrap>
-            {showText?  <TextWrap>
-              {Object.keys(selectedItem).sort().map((key, index) => {
-                return propertyToDisplay[key] ? (
-                  <p key={index}>
-                    {propertyToDisplay[key]}: {selectedItem[key]}
-                  </p>
-                ) : null;
-              })}
-            </TextWrap> :null}
-           
+            {showText ? (
+              <TextWrap>
+                {Object.keys(selectedItem)
+                  .sort()
+                  .map((key, index) => {
+                    return propertyToDisplay[key] ? (
+                      <p key={index}>
+                        {propertyToDisplay[key]}: {selectedItem[key]}
+                      </p>
+                    ) : null;
+                  })}
+              </TextWrap>
+            ) : null}
+
             <ImageWrap>
               {urls.map((item, index) => {
                 return <Image key={index} src={item} alt="item" />;

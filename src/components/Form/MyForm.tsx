@@ -49,20 +49,23 @@ interface MyFormProps {
   updateSnackbar: (text: string, color: "red" | "green") => void;
 }
 const MyForm = ({ updateSnackbar }: MyFormProps) => {
-  const [formValue, setFormValue] = useState<any>(defaultFormValue);
+  const [formValue, setFormValue] = useState<BaseItem>(defaultFormValue);
   const [files, setFiles] = useState<any>([]);
   useEffect(() => {
-    console.log(formValue);
+    console.log(formValue, "form");
   }, [formValue]);
   useEffect(() => {
-    console.log(files);
+    console.log(files, "files");
   }, [files]);
   return (
     <MegaWrap>
       <Wrap>
         <Form
           formValue={formValue}
-          onChange={(formValue) => setFormValue(formValue)}
+          onChange={(newFormValue) => {
+            const x = newFormValue as BaseItem;
+            setFormValue(x);
+          }}
           style={{ padding: "1rem" }}
         >
           <Form.Group controlId="name">
@@ -83,7 +86,10 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
 
         <Form
           formValue={formValue}
-          onChange={(formValue) => setFormValue(formValue)}
+          onChange={(newFormValue) => {
+            const x = newFormValue as BaseItem;
+            setFormValue(x);
+          }}
           style={{ padding: "1rem" }}
         >
           <Form.Group controlId="location">
@@ -106,11 +112,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
             </Form.Group>
           </div>
         </Form>
-        <Form
-          formValue={formValue}
-          onChange={(formValue) => setFormValue(formValue)}
-          style={{ padding: "1rem" }}
-        >
+        <Form formValue={formValue} style={{ padding: "1rem" }}>
           <InputWrap>
             <FileInput value={files} onChange={setFiles} />
           </InputWrap>

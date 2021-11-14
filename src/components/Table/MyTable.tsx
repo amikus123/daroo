@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Column, HeaderCell, SortType } from "rsuite-table";
-import { Item, RowData } from "../../const/types";
+import {  RowData } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
@@ -12,7 +12,7 @@ interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
   setShowText: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
   updateSnackbar: (text: string, color: "red" | "green") => void;
 }
 
@@ -74,13 +74,13 @@ const MyTable = ({
     }
   };
 
-  const handleRowClick = (id: number) => {
+  const handleRowClick = (dbId: string) => {
     setShowText(true);
-    setSelectedIndex(id);
+    setSelectedIndex(dbId);
   };
-  const handleImageClick = (id: number) => {
+  const handleImageClick = (dbId: string) => {
     setShowText(false);
-    setSelectedIndex(id);
+    setSelectedIndex(dbId);
   };
 
   return (

@@ -1,3 +1,5 @@
+
+// used in Fomrs
 export interface BaseItem {
   location: "PP" | "PPZ";
   category: "nowe" | "odzysk" | "uszkodzone" | "sprawne";

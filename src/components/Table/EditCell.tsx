@@ -1,7 +1,6 @@
 import { Cell } from "rsuite-table";
 import styled from "styled-components";
 
-
 const MyCell = styled(Cell)`
   & * {
     overflow: visible;
@@ -12,7 +11,7 @@ const EditCell = ({
   rowData,
   dataKey,
   onChange,
-  handleClick = (arg: number) => {},
+  handleClick = (arg: string) => {},
   ...props
 }) => {
   const editing = rowData.status === "EDIT";
@@ -22,8 +21,9 @@ const EditCell = ({
         {...props}
         className={editing ? "table-content-editing" : ""}
         onClick={() => {
+          console.log(rowData, "ROW");
           if (!editing) {
-            handleClick(rowData.id);
+            handleClick(rowData.dbId);
           }
         }}
       >
