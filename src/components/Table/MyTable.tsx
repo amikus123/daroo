@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table, Column, HeaderCell } from "rsuite-table";
-import { Item } from "../../const/types";
+import { Table, Column, HeaderCell, SortType } from "rsuite-table";
+import { Item, RowData } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
 import { Panel } from "rsuite";
+import { updateByDbId } from "../../firebase/fetch";
+import { getData, verifyItemChange } from "./helpers";
 
 interface MyTableProps {
   passedData: Item[];
@@ -13,10 +15,8 @@ interface MyTableProps {
   updateSnackbar: (text: string, color: "red" | "green") => void;
 }
 
-type TableRow = Item & { id: string; status: "EDIT" | null };
-
 const addIds = (originalData: Item[]) => {
-  const res: TableRow[] = originalData.map((item, index) => {
+  const res: RowData[] = originalData.map((item, index) => {
     return { ...item, id: index + "", status: null };
   });
   return res;
@@ -26,58 +26,30 @@ const MyTable = ({
   passedData,
   setShowText,
   setSelectedIndex,
-  updateSnackbar
+  updateSnackbar,
 }: MyTableProps) => {
-  const [staticData, setStaticData] = useState<TableRow[]>(addIds(passedData));
+  const [staticData, setStaticData] = useState<RowData[]>(addIds(passedData));
   const [sortColumn, setSortColumn] = useState("");
-  const [sortType, setSortType] = useState<any>("");
-  const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [editingCount,setEditingCount] = useState(0)
+  const [sortType, setSortType] = useState<SortType>("asc");
+  const [editingCount, setEditingCount] = useState(0);
+
   useEffect(() => {
-  }, [passedData]);
-  useEffect(() => {
+    // sets data if state is empty
     if (staticData.length === 0) {
       setStaticData(addIds(passedData));
+    } else if (sortColumn && sortType && editingCount === 0) {
+      // if 0 items are being edited we allow to sort by values
+      const newData = getData(staticData, sortColumn, sortType);
+      setStaticData(newData);
     } else {
-      getData(staticData);
     }
-  }, [sortColumn, sortType, editing, passedData]);
+    // inclusion of passedData creates infitine loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortColumn, sortType, editingCount, passedData]);
 
-  const getData = (data: TableRow[]) => {
-    let copy = [...data];
-    if (sortColumn && sortType && !editing) {
-      // get first char
-      copy = copy.sort((a, b) => {
-        let x: string | number = a[sortColumn];
-        let y: string | number = b[sortColumn];
-        let xVal = 0,
-          yVal = 0;
-        if (typeof x === "string" && typeof y === "string") {
-          xVal = x.localeCompare(y);
-          yVal = 0;
-        } else {
-          xVal = a[sortColumn];
-          yVal = b[sortColumn];
-        }
-
-        if (sortType === "asc") {
-          return xVal - yVal;
-        } else {
-          return yVal - xVal;
-        }
-      });
-    }
-    setStaticData(copy);
-  };
-
-  const handleSortColumn = (sortColumn, sortType) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSortColumn(sortColumn);
-      setSortType(sortType);
-    }, 500);
+  const handleSortColumn = (sortColumn: string, sortType: SortType) => {
+    setSortColumn(sortColumn);
+    setSortType(sortType);
   };
 
   const handleChange = (id: string, key: string, value: any) => {
@@ -86,20 +58,32 @@ const MyTable = ({
     setStaticData(nextData);
   };
 
-  const handleEditState = (id: string) => {
-    setEditing(!editing);
-    const nextData = Object.assign([], staticData);
-    const activeItem = nextData.find((item) => item.id === id);
-    console.log(activeItem, nextData,"XD",editing);
-    // if we are about to save, 
-    if(editing){
-      // verify if item is correct
+  const handleEditState = async (id: string, rowData: RowData) => {
+    const isDataCorrent = verifyItemChange(rowData);
+    if (isDataCorrent) {
+      if (rowData.status === "EDIT") {
+        setEditingCount(editingCount - 1);
+      } else {
+        setEditingCount(editingCount + 1);
+      }
+      const nextData = Object.assign([], staticData);
+      const activeItem = nextData.find((item) => item.id === id);
+      // we toggle the item status
+      activeItem.status = activeItem.status ? null : "EDIT";
+      setStaticData(nextData);
+      const updateRes = await updateByDbId(rowData);
+      if(updateRes ==="success"){
+        updateSnackbar("Sucess", "red");
+
+      }else{
+        updateSnackbar("Failed to update", "red");
+
+      }
+    } else {
+      updateSnackbar("Inncorect Data", "red");
+      // dont do the up
     }
-    activeItem.status = activeItem.status ? null : "EDIT";
-
-    setStaticData(nextData);
   };
-
 
   const handleRowClick = (id: number) => {
     setShowText(true);
@@ -112,15 +96,13 @@ const MyTable = ({
 
   return (
     <Panel header="Przedmioty" bordered bodyFill>
+      {editingCount}
       <Table
         autoHeight={true}
         data={staticData}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
-        loading={loading}
-        onRowClick={(data) => {
-        }}
       >
         <Column width={120} sortable>
           <HeaderCell>Nazwa</HeaderCell>
@@ -175,7 +157,7 @@ const MyTable = ({
         <Column width={80}>
           <HeaderCell>Edit</HeaderCell>
           <ActionCell
-          staticData={staticData}
+            staticData={staticData}
             dataKey="id"
             onClick={handleEditState}
             rowData={undefined}

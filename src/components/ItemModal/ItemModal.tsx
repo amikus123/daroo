@@ -3,7 +3,7 @@ import { getURL } from "../../firebase/fetch";
 import styled from "styled-components";
 import { propertyToDisplay } from "../../const/types";
 
-interface ImageModalProps {
+interface ItemModalProps {
   selectedItem: any;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
   showText:boolean
@@ -51,7 +51,7 @@ const ImageWrap = styled.div`
   height: auto;
 `;
 
-const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ImageModalProps) => {
+const ItemModal = ({ selectedItem, setSelectedIndex,showText}: ItemModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
 
   useEffect(() => {

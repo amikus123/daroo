@@ -6,7 +6,7 @@ import MyTable from "./components/Table/MyTable";
 import { getAll } from "./firebase/fetch";
 import styled from "styled-components";
 import ItemModal from "./components/ItemModal/ItemModal";
-import { SnackbarType } from "./const/types";
+import { Item, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 
 const Wrap = styled.div`
@@ -33,6 +33,7 @@ const App = () => {
     text: "",
     prevTimeoutId: null,
   });
+
   const updateSnackbar = (text: string, color: "red" | "green" = "green") => {
     // if there is no previous timeout, we set it
     // else we remove it and then set it
@@ -45,6 +46,14 @@ const App = () => {
     }, 5000);
     setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
   };
+
+  const addIds = (originalData: Item[]) => {
+    const res: RowData[] = originalData.map((item, index) => {
+      return { ...item, id: index + "", status: null };
+    });
+    return res;
+  };
+  
   useEffect(() => {
     const fetch = async () => {
       const res = await getAll();
@@ -53,6 +62,7 @@ const App = () => {
     };
     fetch();
   }, []);
+
   return (
     <CustomProvider theme="light">
       <Wrap>
@@ -69,10 +79,7 @@ const App = () => {
           setSelectedIndex={setSelectedIndex}
           showText={showText}
         />
-        <Snackbar
-          snackbarValue={snackbarValue}
-          setSnackbarValue={setSnackbarValue}
-        />
+        <Snackbar snackbarValue={snackbarValue} />
         <MyForm updateSnackbar={updateSnackbar} />
         <P>
           Klikniecie na nazwe kolumny sortuje wg wartosci kolumny(rosnąco albo

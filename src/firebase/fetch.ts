@@ -4,11 +4,20 @@ import { db, storage } from "./main";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-const tryToUploadImg = async (file: any, fileName: string) => {
-  const storageRef = ref(storage, fileName);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+interface FirebaseReposne {
+  success: boolean;
+  text: string;
+}
+
+// All interaction with db should return  FirebaseReposne
+const uploadImage = async (file: File, fileName: string) => {
+  try {
+    const storageRef = ref(storage, fileName);
+    await uploadBytes(storageRef, file);
+    return console.log("succ");
+  } catch (e) {
+    return console.log("fff");
+  }
 };
 
 export const addItemFromForm = async (
@@ -19,8 +28,9 @@ export const addItemFromForm = async (
     const dbId = uuidv4();
     const itemRef = doc(db, "items", dbId);
     for (let i = 0; i < files.length; i++) {
-      await tryToUploadImg(files[i], dbId + "-" + i);
+      await uploadImage(files[i], dbId + "-" + i);
     }
+    console.log("uploaded all");
     await setDoc(
       itemRef,
       { ...data, imageCount: files.length, dbId },
@@ -32,14 +42,19 @@ export const addItemFromForm = async (
   }
 };
 
-export const updateByDbId = async (data: Item) => {
-  const itemRef = doc(db, "items", data.dbId);
-  const { location, category, name, description, count } = data;
-  await setDoc(
-    itemRef,
-    { location, category, name, description, count },
-    { merge: true }
-  );
+export const updateByDbId = async (data: Item): Promise<string> => {
+  try {
+    const itemRef = doc(db, "items", data.dbId);
+    const { location, category, name, description, count } = data;
+    await setDoc(
+      itemRef,
+      { location, category, name, description, count },
+      { merge: true }
+    );
+    return "success";
+  } catch (e) {
+    return e.code;
+  }
 };
 
 export const getAll = async () => {

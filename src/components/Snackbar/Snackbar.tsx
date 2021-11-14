@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 interface SnackbarProps {
   snackbarValue: SnackbarType;
-  setSnackbarValue: React.Dispatch<React.SetStateAction<SnackbarType>>;
 }
 
 const ContentWrap = styled.div`
@@ -30,7 +29,7 @@ const Overlay = styled.div`
   pointer-events: none;
 `;
 
-const Snackbar = ({ snackbarValue, setSnackbarValue }: SnackbarProps) => {
+const Snackbar = ({ snackbarValue }: SnackbarProps) => {
   return (
     <Overlay style={{ visibility: snackbarValue.show?"visible":"hidden" }}>
       <ContentWrap style={{ backgroundColor: snackbarValue.color }}>
