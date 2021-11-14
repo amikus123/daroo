@@ -28,6 +28,8 @@ const App = () => {
   const [selectedDbId, setSelectedDbId] = useState("");
   const [showText, setShowText] = useState(false);
   // used in  Status Modal
+  // map of already fetched images
+
   const [snackbarValue, setSnackbarValue] = useState<SnackbarType>({
     show: false,
     color: "red",
@@ -48,7 +50,7 @@ const App = () => {
     setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
   };
 
-  
+  // fetch initial data
   useEffect(() => {
     const addIds = (originalData: Item[]) => {
       const res: RowData[] = originalData.map((item, index) => {
@@ -58,7 +60,12 @@ const App = () => {
     };
     const fetch = async () => {
       const res = await getAll();
-      setTableData(addIds(res));
+      if (res.error) {
+        updateSnackbar(res.text, "red");
+      } else {
+        updateSnackbar(res.text, "green");
+        setTableData(addIds(res.items));
+      }
     };
     fetch();
   }, []);
@@ -76,7 +83,7 @@ const App = () => {
           />
         </TableWrap>
         <ItemModal
-          selectedItem={getItemWithDbId(tableData,selectedDbId)}
+          selectedItem={getItemWithDbId(tableData, selectedDbId)}
           setSelectedIndex={setSelectedDbId}
           showText={showText}
         />

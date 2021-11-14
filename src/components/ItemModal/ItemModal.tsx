@@ -58,23 +58,34 @@ const ItemModal = ({
   showText,
 }: ItemModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
+  const [fetchedImages, setFetchedImages] = useState<Record<string, string>>(
+    {}
+  );
 
   useEffect(() => {
-    const fetch = async () => {
+    const setImages = async () => {
       const imagesNames: string[] = [];
       for (let i = 0; i < selectedItem.imageCount; i++) {
         imagesNames.push(selectedItem.dbId + "-" + i);
       }
       const res: string[] = [];
       for (let i = 0; i < imagesNames.length; i++) {
-        const trueUrl = await getURL(imagesNames[i]);
-        res.push(trueUrl);
+        const currentimageName = imagesNames[i];
+        if (currentimageName in fetchedImages) {
+          res.push(fetchedImages[currentimageName]);
+        } else {
+          const trueUrl = await getURL(currentimageName);
+          setFetchedImages({ ...fetchedImages, [currentimageName]: trueUrl });
+          res.push(trueUrl);
+        }
       }
       setUrls(res);
     };
     if (selectedItem !== null) {
-      fetch();
+      setImages();
     }
+    // creates infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem]);
   return (
     <>
@@ -83,6 +94,7 @@ const ItemModal = ({
           style={{ display: selectedItem === undefined ? "none" : "block" }}
           onClick={() => {
             setSelectedIndex("");
+            setUrls([]);
           }}
         >
           <ContentWrap>

@@ -57,14 +57,35 @@ export const updateByDbId = async (data: Item): Promise<string> => {
   }
 };
 
-export const getAll = async (): Promise<Item[]> => {
-  const querySnapshot = await getDocs(collection(db, "items"));
-  const res = [];
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    res.push(doc.data());
-  });
-  return res;
+export const getAll = async (): Promise<FetchedURLS> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "items"));
+    const items: Item[] = [];
+    querySnapshot.forEach((doc) => {
+      const docData = doc.data() as Item;
+      items.push(docData);
+    });
+    return {
+      items,
+      error: false,
+      text: "",
+    };
+  } catch (e) {
+    return {
+      items: [],
+      error: true,
+      text: e.code,
+    };
+  }
+};
+
+export interface BaseFirestoreResposne {
+  text: string;
+  error: boolean;
+}
+
+export type FetchedURLS = BaseFirestoreResposne & {
+  items: Item[];
 };
 
 export const getURL = async (imageName: string) => {
