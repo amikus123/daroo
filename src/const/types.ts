@@ -3,7 +3,8 @@ export interface BaseItem {
   category: "nowe" | "odzysk" | "uszkodzone" | "sprawne";
   name: string;
   description: string;
-  count: number;
+  // but has to numeric
+  count: string;
 }
 
 export type Item = BaseItem & { imageCount: number; dbId: string };

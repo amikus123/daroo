@@ -9,43 +9,34 @@ import { updateByDbId } from "../../firebase/fetch";
 import { getData, verifyItemChange } from "./helpers";
 
 interface MyTableProps {
-  passedData: Item[];
+  tableData: RowData[];
+  setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
   setShowText: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
   updateSnackbar: (text: string, color: "red" | "green") => void;
 }
 
-const addIds = (originalData: Item[]) => {
-  const res: RowData[] = originalData.map((item, index) => {
-    return { ...item, id: index + "", status: null };
-  });
-  return res;
-};
-
 const MyTable = ({
-  passedData,
+  tableData,
+  setTableData,
   setShowText,
   setSelectedIndex,
   updateSnackbar,
 }: MyTableProps) => {
-  const [staticData, setStaticData] = useState<RowData[]>(addIds(passedData));
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<SortType>("asc");
   const [editingCount, setEditingCount] = useState(0);
 
   useEffect(() => {
-    // sets data if state is empty
-    if (staticData.length === 0) {
-      setStaticData(addIds(passedData));
-    } else if (sortColumn && sortType && editingCount === 0) {
+    if (sortColumn && sortType && editingCount === 0) {
       // if 0 items are being edited we allow to sort by values
-      const newData = getData(staticData, sortColumn, sortType);
-      setStaticData(newData);
+      const newData = getData(tableData, sortColumn, sortType);
+      setTableData(newData);
     } else {
     }
-    // inclusion of passedData creates infitine loop
+    // inclusion of tableData creates infitine loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortColumn, sortType, editingCount, passedData]);
+  }, [sortColumn, sortType, editingCount]);
 
   const handleSortColumn = (sortColumn: string, sortType: SortType) => {
     setSortColumn(sortColumn);
@@ -53,9 +44,9 @@ const MyTable = ({
   };
 
   const handleChange = (id: string, key: string, value: any) => {
-    const nextData = Object.assign([], staticData);
+    const nextData = Object.assign([], tableData);
     nextData.find((item) => item.id === id)[key] = value;
-    setStaticData(nextData);
+    setTableData(nextData);
   };
 
   const handleEditState = async (id: string, rowData: RowData) => {
@@ -66,18 +57,16 @@ const MyTable = ({
       } else {
         setEditingCount(editingCount + 1);
       }
-      const nextData = Object.assign([], staticData);
+      const nextData = Object.assign([], tableData);
       const activeItem = nextData.find((item) => item.id === id);
       // we toggle the item status
       activeItem.status = activeItem.status ? null : "EDIT";
-      setStaticData(nextData);
+      setTableData(nextData);
       const updateRes = await updateByDbId(rowData);
-      if(updateRes ==="success"){
+      if (updateRes === "success") {
         updateSnackbar("Sucess", "red");
-
-      }else{
+      } else {
         updateSnackbar("Failed to update", "red");
-
       }
     } else {
       updateSnackbar("Inncorect Data", "red");
@@ -99,7 +88,7 @@ const MyTable = ({
       {editingCount}
       <Table
         autoHeight={true}
-        data={staticData}
+        data={tableData}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
@@ -157,7 +146,6 @@ const MyTable = ({
         <Column width={80}>
           <HeaderCell>Edit</HeaderCell>
           <ActionCell
-            staticData={staticData}
             dataKey="id"
             onClick={handleEditState}
             rowData={undefined}

@@ -22,7 +22,7 @@ const P = styled.p`
 `;
 const App = () => {
   // data initiallly fetched from db
-  const [data, setData] = useState([]);
+  const [tableData, setTableData] = useState<RowData[]>([]);
   // used in Item Modal
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [showText, setShowText] = useState(false);
@@ -47,18 +47,17 @@ const App = () => {
     setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
   };
 
-  const addIds = (originalData: Item[]) => {
-    const res: RowData[] = originalData.map((item, index) => {
-      return { ...item, id: index + "", status: null };
-    });
-    return res;
-  };
   
   useEffect(() => {
+    const addIds = (originalData: Item[]) => {
+      const res: RowData[] = originalData.map((item, index) => {
+        return { ...item, id: index + "", status: null };
+      });
+      return res;
+    };
     const fetch = async () => {
       const res = await getAll();
-      setData(res);
-      console.log(res, "DOSTALEM");
+      setTableData(addIds(res));
     };
     fetch();
   }, []);
@@ -68,14 +67,15 @@ const App = () => {
       <Wrap>
         <TableWrap>
           <MyTable
-            passedData={data}
+            tableData={tableData}
+            setTableData={setTableData}
             setSelectedIndex={setSelectedIndex}
             setShowText={setShowText}
             updateSnackbar={updateSnackbar}
           />
         </TableWrap>
         <ItemModal
-          selectedItem={data[selectedIndex]}
+          selectedItem={tableData[selectedIndex]}
           setSelectedIndex={setSelectedIndex}
           showText={showText}
         />

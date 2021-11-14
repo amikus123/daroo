@@ -57,7 +57,7 @@ export const updateByDbId = async (data: Item): Promise<string> => {
   }
 };
 
-export const getAll = async () => {
+export const getAll = async (): Promise<Item[]> => {
   const querySnapshot = await getDocs(collection(db, "items"));
   const res = [];
   querySnapshot.forEach((doc) => {

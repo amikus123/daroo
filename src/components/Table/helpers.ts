@@ -1,11 +1,14 @@
 import { SortType } from "rsuite-table";
 import { RowData } from "../../const/types";
 
+export const isPositiveInteger = (n: string | number) => {
+  return !isNaN(Number(n));
+};
 export const verifyItemChange = (rowData: RowData) => {
   // check if passed item has corret values
   const { location, category, name, description, count } = rowData;
   if (typeof name !== "string") return false;
-  if (isNaN(count - 1)) return false;
+  if (!isPositiveInteger(count)) return false;
   if (typeof description !== "string") return false;
   if (location !== "PP" && location !== "PPZ") return false;
   if (
@@ -19,20 +22,25 @@ export const verifyItemChange = (rowData: RowData) => {
 };
 
 // return sorted data
-export const getData = (data: RowData[],sortColumn:string,sortType:SortType) => {
+export const getData = (
+  data: RowData[],
+  sortColumn: string,
+  sortType: SortType
+) => {
   let copy = [...data];
   // get first char
   copy = copy.sort((a, b) => {
-    let x: string | number = a[sortColumn];
-    let y: string | number = b[sortColumn];
+    let x: string = a[sortColumn];
+    let y: string = b[sortColumn];
     let xVal = 0,
       yVal = 0;
-    if (typeof x === "string" && typeof y === "string") {
+    if (sortColumn !== "count") {
       xVal = x.localeCompare(y);
       yVal = 0;
+      // true if asc
     } else {
-      xVal = a[sortColumn];
-      yVal = b[sortColumn];
+      xVal = Number(a[sortColumn]);
+      yVal = Number(b[sortColumn]);
     }
 
     if (sortType === "asc") {
@@ -41,6 +49,7 @@ export const getData = (data: RowData[],sortColumn:string,sortType:SortType) => 
       return yVal - xVal;
     }
   });
+  console.log(data, sortColumn, sortType, copy, "sord");
 
-  return copy 
+  return copy;
 };

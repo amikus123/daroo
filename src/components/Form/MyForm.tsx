@@ -16,7 +16,7 @@ const defaultFormValue: BaseItem = {
   category: "odzysk",
   name: "Płyta główna",
   description: "płyta główna awz200",
-  count: 1,
+  count: "1",
 };
 
 const MegaWrap = styled.div`
