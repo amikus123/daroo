@@ -4,31 +4,42 @@ import { db, storage } from "./main";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-interface FirebaseReposne {
-  success: boolean;
+export interface BaseFirestoreResposne {
   text: string;
+  error: boolean;
 }
 
-// All interaction with db should return  FirebaseReposne
-const uploadImage = async (file: File, fileName: string) => {
+const uploadImage = async (
+  file: File,
+  fileName: string
+): Promise<BaseFirestoreResposne> => {
   try {
     const storageRef = ref(storage, fileName);
     await uploadBytes(storageRef, file);
-    return console.log("succ");
+    return {
+      error: false,
+      text: "uploaded file in form",
+    };
   } catch (e) {
-    return console.log("fff");
+    return {
+      error: true,
+      text: e.code,
+    };
   }
 };
 
 export const addItemFromForm = async (
   data: BaseItem,
   files: File[]
-): Promise<string> => {
+): Promise<BaseFirestoreResposne> => {
   try {
     const dbId = uuidv4();
     const itemRef = doc(db, "items", dbId);
     for (let i = 0; i < files.length; i++) {
-      await uploadImage(files[i], dbId + "-" + i);
+      const res = await uploadImage(files[i], dbId + "-" + i);
+      if (res.error) {
+        return res;
+      }
     }
     console.log("uploaded all");
     await setDoc(
@@ -36,13 +47,21 @@ export const addItemFromForm = async (
       { ...data, imageCount: files.length, dbId },
       { merge: true }
     );
-    return "success";
+    return {
+      error: false,
+      text: "Added item to db and uploaded files",
+    };
   } catch (e) {
-    return e.code;
+    return {
+      error: true,
+      text: e.code,
+    };
   }
 };
 
-export const updateByDbId = async (data: Item): Promise<string> => {
+export const updateByDbId = async (
+  data: Item
+): Promise<BaseFirestoreResposne> => {
   try {
     const itemRef = doc(db, "items", data.dbId);
     const { location, category, name, description, count } = data;
@@ -51,13 +70,23 @@ export const updateByDbId = async (data: Item): Promise<string> => {
       { location, category, name, description, count },
       { merge: true }
     );
-    return "success";
+    return {
+      error:false,text:"Changed item in db"
+    };
   } catch (e) {
-    return e.code;
+    return {
+      error:true,
+      text:e.code
+    }
   }
 };
 
-export const getAll = async (): Promise<FetchedURLS> => {
+// USED FOR INITIAL FETCH
+export type FetchedItems = BaseFirestoreResposne & {
+  items: Item[];
+};
+
+export const getAll = async (): Promise<FetchedItems> => {
   try {
     const querySnapshot = await getDocs(collection(db, "items"));
     const items: Item[] = [];
@@ -77,15 +106,6 @@ export const getAll = async (): Promise<FetchedURLS> => {
       text: e.code,
     };
   }
-};
-
-export interface BaseFirestoreResposne {
-  text: string;
-  error: boolean;
-}
-
-export type FetchedURLS = BaseFirestoreResposne & {
-  items: Item[];
 };
 
 export const getURL = async (imageName: string) => {

@@ -11,6 +11,7 @@ import { BaseItem } from "../../const/types";
 import styled from "styled-components";
 import { addItemFromForm } from "../../firebase/fetch";
 import FileInput from "../FileInput";
+
 const defaultFormValue: BaseItem = {
   location: "PP",
   category: "odzysk",
@@ -131,11 +132,11 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
         <Button
           onClick={async () => {
             const res = await addItemFromForm(formValue, files);
-            if (res === "sucess") {
-              setFormValue(defaultFormValue);
-              updateSnackbar(res, "green");
+            if (res.error) {
+              updateSnackbar(res.text, "red");
             } else {
-              updateSnackbar(res, "red");
+              updateSnackbar(res.text, "green");
+              setFormValue(defaultFormValue);
             }
           }}
         >

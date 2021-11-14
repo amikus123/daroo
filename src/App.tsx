@@ -63,7 +63,6 @@ const App = () => {
       if (res.error) {
         updateSnackbar(res.text, "red");
       } else {
-        updateSnackbar(res.text, "green");
         setTableData(addIds(res.items));
       }
     };

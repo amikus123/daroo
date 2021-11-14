@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Column, HeaderCell, SortType } from "rsuite-table";
-import {  RowData } from "../../const/types";
+import { RowData } from "../../const/types";
 import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
@@ -50,27 +50,31 @@ const MyTable = ({
   };
 
   const handleEditState = async (id: string, rowData: RowData) => {
-    const isDataCorrent = verifyItemChange(rowData);
-    if (isDataCorrent) {
-      if (rowData.status === "EDIT") {
-        setEditingCount(editingCount - 1);
+    const nextData = Object.assign([], tableData);
+    const activeItem = nextData.find((item) => item.id === id);
+
+    if (rowData.status === "EDIT") {
+      const isDataCorrent = verifyItemChange(rowData);
+      if (isDataCorrent) {
+        // we toggle the item status
+        setTableData(nextData);
+        const updateRes = await updateByDbId(rowData);
+        if (updateRes.error) {
+          updateSnackbar(updateRes.text, "red");
+        } else {
+          updateSnackbar(updateRes.text, "green");
+          setEditingCount(editingCount - 1);
+          activeItem.status = activeItem.status ? null : "EDIT";
+        }
       } else {
-        setEditingCount(editingCount + 1);
-      }
-      const nextData = Object.assign([], tableData);
-      const activeItem = nextData.find((item) => item.id === id);
-      // we toggle the item status
-      activeItem.status = activeItem.status ? null : "EDIT";
-      setTableData(nextData);
-      const updateRes = await updateByDbId(rowData);
-      if (updateRes === "success") {
-        updateSnackbar("Sucess", "red");
-      } else {
-        updateSnackbar("Failed to update", "red");
+        updateSnackbar("Inncorect Data", "red");
+        // dont do the up
       }
     } else {
-      updateSnackbar("Inncorect Data", "red");
-      // dont do the up
+      setEditingCount(editingCount + 1);
+      activeItem.status = activeItem.status ? null : "EDIT";
+
+      // nic sie nie zmienia
     }
   };
 
