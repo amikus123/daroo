@@ -67,17 +67,24 @@ export const updateByDbId = async (
     const { location, category, name, description, count } = data;
     await setDoc(
       itemRef,
-      { location, category, name, description, count },
+      {
+        location: location.toUpperCase(),
+        category: category.toLowerCase(),
+        name,
+        description,
+        count,
+      },
       { merge: true }
     );
     return {
-      error:false,text:"Changed item in db"
+      error: false,
+      text: "Changed item in db",
     };
   } catch (e) {
     return {
-      error:true,
-      text:e.code
-    }
+      error: true,
+      text: e.code,
+    };
   }
 };
 

@@ -51,6 +51,7 @@ const MyTable = ({
 
   const handleEditState = async (id: string, rowData: RowData) => {
     const nextData = Object.assign([], tableData);
+
     const activeItem = nextData.find((item) => item.id === id);
 
     if (rowData.status === "EDIT") {
@@ -60,11 +61,13 @@ const MyTable = ({
         setTableData(nextData);
         const updateRes = await updateByDbId(rowData);
         if (updateRes.error) {
+          // firebase erorr
           updateSnackbar(updateRes.text, "red");
-        } else {
+        } else {//
+          // successful
           updateSnackbar(updateRes.text, "green");
           setEditingCount(editingCount - 1);
-          activeItem.status = activeItem.status ? null : "EDIT";
+          activeItem.status = activeItem.status === "NONE" ? "EDIT" : "NONE";
         }
       } else {
         updateSnackbar("Inncorect Data", "red");
@@ -72,7 +75,7 @@ const MyTable = ({
       }
     } else {
       setEditingCount(editingCount + 1);
-      activeItem.status = activeItem.status ? null : "EDIT";
+      activeItem.status = activeItem.status === "NONE" ? "EDIT" : "NONE";
 
       // nic sie nie zmienia
     }

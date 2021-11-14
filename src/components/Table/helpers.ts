@@ -4,30 +4,34 @@ import { RowData } from "../../const/types";
 export const isPositiveInteger = (n: string | number) => {
   return !isNaN(Number(n));
 };
-export const getItemWithDbId = (data:RowData[],dbId :string)  :null | RowData=>{
-  let res:RowData|null = null
-  if(dbId !==""){
-
-    data.forEach(item=>{
-      if(item.dbId === dbId){
-        res = item
+export const getItemWithDbId = (
+  data: RowData[],
+  dbId: string
+): RowData | null => {
+  let res: RowData | null = null;
+  if (dbId !== "") {
+    data.forEach((item) => {
+      if (item.dbId === dbId) {
+        res = item;
       }
-    })
+    });
   }
-  return res
-}
+  return res;
+};
 export const verifyItemChange = (rowData: RowData) => {
   // check if passed item has corret values
   const { location, category, name, description, count } = rowData;
+  const locationCopy = location.toUpperCase();
+  const categoryCopy = category.toLowerCase();
   if (typeof name !== "string") return false;
   if (!isPositiveInteger(count)) return false;
   if (typeof description !== "string") return false;
-  if (location !== "PP" && location !== "PPZ") return false;
+  if (locationCopy !== "PP" && locationCopy !== "PPZ") return false;
   if (
-    category !== "nowe" &&
-    category !== "odzysk" &&
-    category !== "uszkodzone" &&
-    category !== "sprawne"
+    categoryCopy !== "nowe" &&
+    categoryCopy !== "odzysk" &&
+    categoryCopy !== "uszkodzone" &&
+    categoryCopy !== "sprawne"
   )
     return false;
   return true;

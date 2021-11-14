@@ -54,7 +54,7 @@ const App = () => {
   useEffect(() => {
     const addIds = (originalData: Item[]) => {
       const res: RowData[] = originalData.map((item, index) => {
-        return { ...item, id: index + "", status: null };
+        return { ...item, id: index + "", status: "NONE" };
       });
       return res;
     };
@@ -113,7 +113,9 @@ const App = () => {
           <br />
           Jezeli są prawidlowe, dane w bazie ulegaja zmianie
           <br />
-          Nie edytuj kilku wartosci naraz, bo chwilow psuje to sortowanie
+          Wartosci poł "Miejsce" i "Kategoria" nie zwracaja uwagi na wielkosc liter podczas edycji
+          <br/>
+          Przy zapisie do bazy rozmiar liter jest zmieniany automatycznie
           <br />
           DO DODANIA
           <br />
@@ -122,9 +124,7 @@ const App = () => {
           <br />
           Nie ma tez opcji zmiany zdjec przedmiotu, nw czy ta opcja cie
           interesuje
-          <br />
-          Dodam tez rzeczy mowiace o sukcesie oraz o bledach interkacji z basa
-          danych
+       
         </P>
       </Wrap>
     </CustomProvider>

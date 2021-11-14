@@ -10,7 +10,7 @@ export interface BaseItem {
 }
 
 export type Item = BaseItem & { imageCount: number; dbId: string };
-export type RowData = Item & { id: string; status: "EDIT" | null };
+export type RowData = Item & { id: string; status: "EDIT" | "NONE" };
 
 export interface SnackbarType{
   show:boolean;
