@@ -9,7 +9,7 @@ import {
 } from "rsuite";
 import { BaseItem } from "../../const/types";
 import styled from "styled-components";
-import { updateDb } from "../../firebase/fetch";
+import { addItemFromForm } from "../../firebase/fetch";
 import FileInput from "../FileInput";
 const defaultFormValue: BaseItem = {
   location: "PP",
@@ -45,7 +45,10 @@ const InputWrap = styled.div`
     padding: 1rem;
   }
 `;
-const MyForm = () => {
+interface MyFormProps {
+  updateSnackbar: (text: string, color: "red" | "green") => void;
+}
+const MyForm = ({ updateSnackbar }: MyFormProps) => {
   const [formValue, setFormValue] = useState<any>(defaultFormValue);
   const [files, setFiles] = useState<any>([]);
   useEffect(() => {
@@ -124,14 +127,25 @@ const MyForm = () => {
           Clear form data
         </Button>
         <Button
-          onClick={() => {
-            updateDb(formValue, files);
-            setFormValue(defaultFormValue);
-            alert("wyslano do bazy, odswiez zeby sprawdzic czy sie udalo");
+          onClick={async () => {
+            const res = await addItemFromForm(formValue, files);
+            if (res === "sucess") {
+              setFormValue(defaultFormValue);
+              updateSnackbar(res, "green");
+            } else {
+              updateSnackbar(res, "red");
+            }
           }}
         >
           Upload
         </Button>
+        <button
+          onClick={() => {
+            updateSnackbar("res", "red");
+          }}
+        >
+          aaa
+        </button>
       </ButtonToolbar>
     </MegaWrap>
   );

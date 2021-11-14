@@ -10,6 +10,7 @@ interface MyTableProps {
   passedData: Item[];
   setShowText: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  updateSnackbar: (text: string, color: "red" | "green") => void;
 }
 
 type TableRow = Item & { id: string; status: "EDIT" | null };
@@ -25,6 +26,7 @@ const MyTable = ({
   passedData,
   setShowText,
   setSelectedIndex,
+  updateSnackbar
 }: MyTableProps) => {
   const [staticData, setStaticData] = useState<TableRow[]>(addIds(passedData));
   const [sortColumn, setSortColumn] = useState("");

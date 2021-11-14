@@ -8,6 +8,12 @@ export interface BaseItem {
 
 export type Item = BaseItem & { imageCount: number; dbId: string };
 
+export interface SnackbarType{
+  show:boolean;
+  color:"red"|"green";
+  text:string;
+  prevTimeoutId : ReturnType<typeof setTimeout> | null;
+}
 
 export enum propertyToDisplay  {
 "count"="Ilość",

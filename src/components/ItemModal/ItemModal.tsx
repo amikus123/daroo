@@ -25,8 +25,6 @@ const ContentWrap = styled.div`
   margin: 0 auto;
   overflow-y: scroll;
   max-height: 90vh;
-
-
 `;
 const TextWrap = styled.div`
   background-color: #ffffff;
