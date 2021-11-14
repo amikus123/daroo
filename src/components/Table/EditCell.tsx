@@ -1,49 +1,29 @@
+import { Button } from "rsuite";
 import { Cell } from "rsuite-table";
-import styled from "styled-components";
+import { RowData } from "../../const/types";
 
-const MyCell = styled(Cell)`
-  & * {
-    overflow: visible;
-  }
-`;
 
-const EditCell = ({
-  rowData,
-  dataKey,
-  onChange,
-  handleClick = (arg: string) => {},
-  ...props
-}) => {
-  const editing = rowData.status === "EDIT";
+interface EditCellProps {
+  rowData: undefined | RowData;
+  dataKey: string;
+  onClick: (id: string,rowData:RowData) => void;
+  [propName: string]: {};
+}
+
+const EditCell = ({ rowData, dataKey, onClick, ...props }:EditCellProps) => {
+  // here we will update the state
+
   return (
-    <>
-      <MyCell
-        {...props}
-        className={editing ? "table-content-editing" : ""}
+    <Cell {...props} style={{ padding: "6px" }}>
+      <Button
+        appearance="link"
         onClick={() => {
-          console.log(rowData, "ROW");
-          if (!editing) {
-            handleClick(rowData.dbId);
-          }
+          onClick(rowData.id, rowData);
         }}
       >
-        {editing ? (
-          <input
-            className="rs-input"
-            defaultValue={rowData[dataKey]}
-            onChange={(event) => {
-              onChange && onChange(rowData.id, dataKey, event.target.value);
-            }}
-          />
-        ) : (
-          <>
-            <span className="table-content-edit-span" title={rowData[dataKey]}>
-              {rowData[dataKey]}
-            </span>
-          </>
-        )}
-      </MyCell>
-    </>
+        {rowData.status === "EDIT" ? "Save" : "Edit"}
+      </Button>
+    </Cell>
   );
 };
 export default EditCell;

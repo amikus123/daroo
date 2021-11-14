@@ -1,14 +1,22 @@
 import { Button } from "rsuite";
 import { Cell } from "rsuite-table";
+import { RowData } from "../../const/types";
 
-
-const ImageCell = ({ rowData, dataKey, onClick, ...props }) => {
+interface ImageCellProps {
+  rowData: undefined | RowData;
+  dataKey: string;
+  onClick: (dbId: string) => void;
+  [propName: string]: {};
+}
+const ImageCell = ({ rowData, dataKey, onClick, ...rest }: ImageCellProps) => {
   return (
-    <Cell {...props} style={{ padding: "6px" }}>
+    <Cell {...rest} style={{ padding: "6px" }}>
       <Button
         appearance="link"
         onClick={() => {
-          onClick && onClick(rowData.dbId);
+          if (rowData.imageCount !== 0) {
+            onClick(rowData.dbId);
+          }
         }}
       >
         {rowData.imageCount === 0 ? "No images" : `Show(${rowData.imageCount})`}

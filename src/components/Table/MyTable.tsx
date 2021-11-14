@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, Column, HeaderCell, SortType } from "rsuite-table";
 import { RowData } from "../../const/types";
-import ActionCell from "./ActionCell";
 import EditCell from "./EditCell";
+import TextCell from "./TextCell";
 import ImageCell from "./ImageCell";
 import { Panel } from "rsuite";
 import { updateByDbId } from "../../firebase/fetch";
@@ -82,7 +82,7 @@ const MyTable = ({
   };
 
   const handleRowClick = (dbId: string) => {
-    setShowText(true);
+    setShowText(true);  
     setSelectedIndex(dbId);
   };
   const handleImageClick = (dbId: string) => {
@@ -92,7 +92,6 @@ const MyTable = ({
 
   return (
     <Panel header="Przedmioty" bordered bodyFill>
-      {editingCount}
       <Table
         autoHeight={true}
         data={tableData}
@@ -102,7 +101,7 @@ const MyTable = ({
       >
         <Column width={120} sortable>
           <HeaderCell>Nazwa</HeaderCell>
-          <EditCell
+          <TextCell
             handleClick={handleRowClick}
             dataKey="name"
             onChange={handleChange}
@@ -112,7 +111,7 @@ const MyTable = ({
 
         <Column width={80} sortable>
           <HeaderCell>Ilosc</HeaderCell>
-          <EditCell
+          <TextCell
             handleClick={handleRowClick}
             dataKey="count"
             onChange={handleChange}
@@ -122,7 +121,7 @@ const MyTable = ({
 
         <Column width={120} sortable>
           <HeaderCell>Miejsce</HeaderCell>
-          <EditCell
+          <TextCell
             dataKey="location"
             handleClick={handleRowClick}
             onChange={handleChange}
@@ -132,7 +131,7 @@ const MyTable = ({
 
         <Column width={120} sortable>
           <HeaderCell>Kategoria</HeaderCell>
-          <EditCell
+          <TextCell
             dataKey="category"
             handleClick={handleRowClick}
             onChange={handleChange}
@@ -142,7 +141,7 @@ const MyTable = ({
 
         <Column width={200} sortable>
           <HeaderCell>Opis</HeaderCell>
-          <EditCell
+          <TextCell
             dataKey="description"
             handleClick={handleRowClick}
             onChange={handleChange}
@@ -152,15 +151,15 @@ const MyTable = ({
 
         <Column width={80}>
           <HeaderCell>Edit</HeaderCell>
-          <ActionCell
+          <EditCell
             dataKey="id"
             onClick={handleEditState}
             rowData={undefined}
           />
         </Column>
 
-        <Column width={80}>
-          <HeaderCell>Images</HeaderCell>
+        <Column width={100}>
+          <HeaderCell>Zdjęcia</HeaderCell>
           <ImageCell
             dataKey="imageCount"
             onClick={handleImageClick}

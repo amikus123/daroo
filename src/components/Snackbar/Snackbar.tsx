@@ -10,11 +10,13 @@ const ContentWrap = styled.div`
   position: absolute;
   bottom: 20px;
   width: 80vw;
-  height: 100px;
+  min-height: 60px;
+  padding:1rem;
+  font-size:2rem;
   left: 50%;
   transform: translate(-50%, 0);
-  background-color: blue;
-`;
+  color:white;
+`;  
 
 const Overlay = styled.div`
   position: absolute;
@@ -30,9 +32,13 @@ const Overlay = styled.div`
 `;
 
 const Snackbar = ({ snackbarValue }: SnackbarProps) => {
+  enum Pog  {
+    "green"="#189306",
+    "red"="#930606"
+  }
   return (
     <Overlay style={{ visibility: snackbarValue.show?"visible":"hidden" }}>
-      <ContentWrap style={{ backgroundColor: snackbarValue.color }}>
+      <ContentWrap style={{ backgroundColor: Pog[snackbarValue.color] }}>
         <span>{snackbarValue.text}</span>
       </ContentWrap>
     </Overlay>

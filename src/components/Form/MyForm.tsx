@@ -142,13 +142,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
         >
           Upload
         </Button>
-        <button
-          onClick={() => {
-            updateSnackbar("res", "red");
-          }}
-        >
-          aaa
-        </button>
+  
       </ButtonToolbar>
     </MegaWrap>
   );
