@@ -1,5 +1,5 @@
 import { Cell } from "rsuite-table";
-import { RowData } from "../../const/types";
+import { RowData } from "../../../const/types";
 
 
 

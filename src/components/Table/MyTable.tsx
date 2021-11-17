@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Table, Column, HeaderCell, SortType } from "rsuite-table";
-import { RowData } from "../../const/types";
-import EditCell from "./EditCell";
-import TextCell from "./TextCell";
-import ImageCell from "./ImageCell";
+import { Table, SortType } from "rsuite-table";
+import { PossibleColor, RowData } from "../../const/types";
+
 import { Input, Panel } from "rsuite";
 import { updateByDbId } from "../../firebase/fetch";
 import { getData, verifyItemChange } from "./helpers";
 import {
   textColumnData,
   interactionColumnData,
-  IntercationFunctionsObject,
+  TableElementFunctionOptions,
 } from "./tableColumnData";
-import { createTextColumn, crateInteractionColumns } from "./elementCreation";
+import { createTextColumn, crateInteractionColumns } from "./Columns/elementCreation";
 interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
   setShowText: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
-  updateSnackbar: (text: string, color: "red" | "green") => void;
+  updateSnackbar: (text: string, color: PossibleColor) => void;
 }
 
 const MyTable = ({
@@ -106,10 +104,12 @@ const MyTable = ({
     setShowText(false);
     setSelectedIndex(dbId);
   };
-
-  const elementFunctions: IntercationFunctionsObject = {
+  // object which holds all functions which can be used in table columns 
+  const tableElementFunctions: TableElementFunctionOptions = {
     edit: handleEditState,
     image: handleImageClick,
+    click: handleRowClick,
+    change: handleChange,
   };
 
   return (
@@ -130,8 +130,10 @@ const MyTable = ({
         sortType={sortType}
         onSortColumn={handleSortColumn}
       >
-        {createTextColumn(textColumnData, handleRowClick, handleChange)}
-        {crateInteractionColumns(interactionColumnData, elementFunctions)}
+        {/* creates columns based on data in "tableColumnData" 
+        and functions in "element creation" */}
+        {createTextColumn(textColumnData, tableElementFunctions)}
+        {crateInteractionColumns(interactionColumnData, tableElementFunctions)}
       </Table>
     </Panel>
   );

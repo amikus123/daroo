@@ -1,8 +1,12 @@
 
 // used in Fomrs
+
+export type PossibleLocations = "PP" | "PPZ"
+export type PossibleCategoties = "nowe" | "odzysk" | "uszkodzone" | "sprawne";
+
 export interface BaseItem {
-  location: "PP" | "PPZ";
-  category: "nowe" | "odzysk" | "uszkodzone" | "sprawne";
+  location: PossibleLocations;
+  category: PossibleCategoties
   name: string;
   description: string;
   // but has to numeric
@@ -10,11 +14,14 @@ export interface BaseItem {
 }
 
 export type Item = BaseItem & { imageCount: number; dbId: string };
-export type RowData = Item & { id: string; status: "EDIT" | "NONE" };
 
+export type PossibleRowStatuses = "EDIT" | "NONE" 
+export type RowData = Item & { id: string; status: PossibleRowStatuses};
+
+export type PossibleColor = "red"|"green";
 export interface SnackbarType{
   show:boolean;
-  color:"red"|"green";
+  color:PossibleColor,
   text:string;
   prevTimeoutId : ReturnType<typeof setTimeout> | null;
 }

@@ -1,20 +1,19 @@
 import { Column, HeaderCell } from "rsuite-table";
-import { RowData } from "../../const/types";
+import { RowData } from "../../../const/types";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
 import {
   InteractionOptions,
-  IntercationFunctionsObject,
+  TableElementFunctionOptions,
   MyInteractionColumnProps,
   MyTextColumnProps,
   textColumnData,
-} from "./tableColumnData";
+} from "../tableColumnData";
 import TextCell from "./TextCell";
 
 export const createTextColumn = (
   data: MyTextColumnProps[],
-  handleRowClick: (dbId: string) => void,
-  handleChange: (id: string, key: string, value: any) => void
+  elementFunctions: TableElementFunctionOptions
 ) => {
   return data.map((item, index) => {
     const { rowData, width, sortable, header, dataKey } = item;
@@ -22,9 +21,9 @@ export const createTextColumn = (
       <Column width={width} sortable={sortable} key={index}>
         <HeaderCell>{header}</HeaderCell>
         <TextCell
-          handleClick={handleRowClick}
+          handleClick={elementFunctions.click}
           dataKey={dataKey}
-          onChange={handleChange}
+          onChange={elementFunctions.change}
           rowData={rowData}
         />
       </Column>
@@ -34,7 +33,7 @@ export const createTextColumn = (
 
 export const getElementFromType = (
   item: MyInteractionColumnProps,
-  elementFunctions: IntercationFunctionsObject
+  elementFunctions: TableElementFunctionOptions
 ) => {
   const { dataKey, type, rowData } = item;
   if (type === "edit") {
@@ -57,7 +56,7 @@ export const getElementFromType = (
 };
 export const crateInteractionColumns = (
   data: MyInteractionColumnProps[],
-  elementFunctions: IntercationFunctionsObject
+  elementFunctions: TableElementFunctionOptions
 ) => {
   return data.map((item, index) => {
     const { width, header } = item;

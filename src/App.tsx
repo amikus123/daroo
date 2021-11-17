@@ -6,7 +6,7 @@ import MyTable from "./components/Table/MyTable";
 import { getAll } from "./firebase/fetch";
 import styled from "styled-components";
 import ItemModal from "./components/ItemModal/ItemModal";
-import { Item, RowData, SnackbarType } from "./const/types";
+import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
 
@@ -24,7 +24,6 @@ const P = styled.p`
 const App = () => {
   // data initiallly fetched from db
   const [tableData, setTableData] = useState<RowData[]>([]);
-
   // used in Item Modal
   const [selectedDbId, setSelectedDbId] = useState("");
   const [showText, setShowText] = useState(false);
@@ -39,7 +38,7 @@ const App = () => {
 
 
 
-  const updateSnackbar = (text: string, color: "red" | "green" = "green") => {
+  const updateSnackbar = (text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
     // else we remove it and then set it
     if (snackbarValue.prevTimeoutId !== null) {

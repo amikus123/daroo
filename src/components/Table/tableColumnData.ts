@@ -8,9 +8,11 @@ interface MyBaseColumnProps {
 }
 export type InteractionOptions = "edit" | "image";
 
-export interface IntercationFunctionsObject {
+export interface TableElementFunctionOptions {
   edit: (id: string, rowData: RowData) => Promise<void>;
   image: (dbId: string) => void;
+  click : (dbId: string) => void;
+  change: (id: string, key: string, value: any) =>void;
 }
 export interface MyTextColumnProps extends MyBaseColumnProps {
   sortable: boolean;
