@@ -10,7 +10,10 @@ import {
   interactionColumnData,
   TableElementFunctionOptions,
 } from "./tableColumnData";
-import { createTextColumn, crateInteractionColumns } from "./Columns/elementCreation";
+import {
+  createTextColumn,
+  crateInteractionColumns,
+} from "./Columns/elementCreation";
 interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
@@ -29,28 +32,42 @@ const MyTable = ({
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<SortType>("asc");
   const [editingCount, setEditingCount] = useState(0);
-  // this arr is uded for viewing filtered items
-  const [tempTableData, setTempTableData] = useState<RowData[]>([]);
+
+  // this data is modified for sorting purposes
+  const [filteredTableData, setFilteredTableData] = useState<RowData[]>([]);
   const [searchedText, setSearchedText] = useState("");
 
+  // update array from the top
+  useEffect(() => {
+    if (editingCount === 0) {
+      setFilteredTableData(tableData);
+    }
+  }, [tableData, editingCount]);
+
+  // update shown array
   useEffect(() => {
     // prevent change while eedidnitng
-    const a = [...tableData].filter((item) =>
-      item.name.toLowerCase().includes(searchedText.toLowerCase())
-    );
-    setTableData(a);
-  }, [searchedText]);
+    if (true) {
+      setFilteredTableData(filterArray());
+    }
+  }, [searchedText, editingCount]);
 
   useEffect(() => {
     if (sortColumn && sortType && editingCount === 0) {
       // if 0 items are being edited we allow to sort by values
       const newData = getData(tableData, sortColumn, sortType);
-      setTableData(newData);
+      setFilteredTableData(filterArray(newData));
     } else {
     }
     // inclusion of tableData creates infitine loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortColumn, sortType, editingCount]);
+  }, [sortColumn, sortType, editingCount, searchedText]);
+  // update arr based on fillert
+  const filterArray = (arr: RowData[] = tableData) => {
+    return [...arr].filter((item) =>
+      item.name.toLowerCase().includes(searchedText.toLowerCase())
+    );
+  };
 
   const handleSortColumn = (sortColumn: string, sortType: SortType) => {
     setSortColumn(sortColumn);
@@ -59,6 +76,8 @@ const MyTable = ({
 
   const handleChange = (id: string, key: string, value: any) => {
     // const nextData = Object.assign([], tableData);
+    console.log("handleChange");
+
     const nextData = [...tableData];
     nextData.find((item) => item.id === id)[key] = value;
     setTableData(nextData);
@@ -68,6 +87,7 @@ const MyTable = ({
     // const nextData = Object.assign([], tableData);
     const nextData = [...tableData];
     const activeItem = nextData.find((item) => item.id === id);
+    console.log("handleEditState");
 
     if (rowData.status === "EDIT") {
       const isDataCorrent = verifyItemChange(rowData);
@@ -104,7 +124,7 @@ const MyTable = ({
     setShowText(false);
     setSelectedIndex(dbId);
   };
-  // object which holds all functions which can be used in table columns 
+  // object which holds all functions which can be used in table columns
   const tableElementFunctions: TableElementFunctionOptions = {
     edit: handleEditState,
     image: handleImageClick,
@@ -125,7 +145,7 @@ const MyTable = ({
       <Table
         virtualized
         height={600}
-        data={tableData}
+        data={filteredTableData}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}

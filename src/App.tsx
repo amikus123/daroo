@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useCallback } from "react";
 import { CustomProvider } from "rsuite";
 import "rsuite-table/dist/css/rsuite-table.css";
 import MyForm from "./components/Form/MyForm";
@@ -38,18 +38,19 @@ const App = () => {
 
 
 
-  const updateSnackbar = (text: string, color: PossibleColor = "green") => {
+  const updateSnackbar = useCallback((text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
     // else we remove it and then set it
-    if (snackbarValue.prevTimeoutId !== null) {
-      clearTimeout(snackbarValue.prevTimeoutId);
+    if(snackbarValue.text !== ""){
+      if (snackbarValue.prevTimeoutId !== null) {
+        clearTimeout(snackbarValue.prevTimeoutId);
+      }
+      const newTimeoutId = setTimeout(() => {
+        setSnackbarValue({ ...snackbarValue, show: false, prevTimeoutId: null });
+      }, 5000);
+      setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
     }
-
-    const newTimeoutId = setTimeout(() => {
-      setSnackbarValue({ ...snackbarValue, show: false, prevTimeoutId: null });
-    }, 5000);
-    setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
-  };
+  },[snackbarValue]);
 
   // fetch initial data
   useEffect(() => {
@@ -69,12 +70,12 @@ const App = () => {
       }
     };
     fetch();
-  }, []);
+  }, [updateSnackbar]);
 
   return (
     <CustomProvider theme="light">
       <Wrap>
-    
+      {JSON.stringify(tableData)}
         <TableWrap>
           <MyTable
             tableData={tableData}
