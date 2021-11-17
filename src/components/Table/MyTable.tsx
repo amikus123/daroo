@@ -4,10 +4,15 @@ import { RowData } from "../../const/types";
 import EditCell from "./EditCell";
 import TextCell from "./TextCell";
 import ImageCell from "./ImageCell";
-import { Panel } from "rsuite";
+import { Input, Panel } from "rsuite";
 import { updateByDbId } from "../../firebase/fetch";
 import { getData, verifyItemChange } from "./helpers";
-
+import {
+  textColumnData,
+  interactionColumnData,
+  IntercationFunctionsObject,
+} from "./tableColumnData";
+import { createTextColumn, crateInteractionColumns } from "./elementCreation";
 interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
@@ -26,6 +31,17 @@ const MyTable = ({
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<SortType>("asc");
   const [editingCount, setEditingCount] = useState(0);
+  // this arr is uded for viewing filtered items
+  const [tempTableData, setTempTableData] = useState<RowData[]>([]);
+  const [searchedText, setSearchedText] = useState("");
+
+  useEffect(() => {
+    // prevent change while eedidnitng
+    const a = [...tableData].filter((item) =>
+      item.name.toLowerCase().includes(searchedText.toLowerCase())
+    );
+    setTableData(a);
+  }, [searchedText]);
 
   useEffect(() => {
     if (sortColumn && sortType && editingCount === 0) {
@@ -44,14 +60,15 @@ const MyTable = ({
   };
 
   const handleChange = (id: string, key: string, value: any) => {
-    const nextData = Object.assign([], tableData);
+    // const nextData = Object.assign([], tableData);
+    const nextData = [...tableData];
     nextData.find((item) => item.id === id)[key] = value;
     setTableData(nextData);
   };
 
   const handleEditState = async (id: string, rowData: RowData) => {
-    const nextData = Object.assign([], tableData);
-
+    // const nextData = Object.assign([], tableData);
+    const nextData = [...tableData];
     const activeItem = nextData.find((item) => item.id === id);
 
     if (rowData.status === "EDIT") {
@@ -63,7 +80,8 @@ const MyTable = ({
         if (updateRes.error) {
           // firebase erorr
           updateSnackbar(updateRes.text, "red");
-        } else {//
+        } else {
+          //
           // successful
           updateSnackbar(updateRes.text, "green");
           setEditingCount(editingCount - 1);
@@ -76,13 +94,12 @@ const MyTable = ({
     } else {
       setEditingCount(editingCount + 1);
       activeItem.status = activeItem.status === "NONE" ? "EDIT" : "NONE";
-
       // nic sie nie zmienia
     }
   };
 
   const handleRowClick = (dbId: string) => {
-    setShowText(true);  
+    setShowText(true);
     setSelectedIndex(dbId);
   };
   const handleImageClick = (dbId: string) => {
@@ -90,82 +107,31 @@ const MyTable = ({
     setSelectedIndex(dbId);
   };
 
+  const elementFunctions: IntercationFunctionsObject = {
+    edit: handleEditState,
+    image: handleImageClick,
+  };
+
   return (
     <Panel header="Przedmioty" bordered bodyFill>
+      <Input
+        placeholder="Default Input"
+        value={searchedText}
+        onChange={(value) => {
+          setSearchedText(value);
+        }}
+      />
+
       <Table
-        autoHeight={true}
+        virtualized
+        height={600}
         data={tableData}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
       >
-        <Column width={120} sortable>
-          <HeaderCell>Nazwa</HeaderCell>
-          <TextCell
-            handleClick={handleRowClick}
-            dataKey="name"
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={80} sortable>
-          <HeaderCell>Ilosc</HeaderCell>
-          <TextCell
-            handleClick={handleRowClick}
-            dataKey="count"
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={120} sortable>
-          <HeaderCell>Miejsce</HeaderCell>
-          <TextCell
-            dataKey="location"
-            handleClick={handleRowClick}
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={120} sortable>
-          <HeaderCell>Kategoria</HeaderCell>
-          <TextCell
-            dataKey="category"
-            handleClick={handleRowClick}
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={200} sortable>
-          <HeaderCell>Opis</HeaderCell>
-          <TextCell
-            dataKey="description"
-            handleClick={handleRowClick}
-            onChange={handleChange}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={80}>
-          <HeaderCell>Edit</HeaderCell>
-          <EditCell
-            dataKey="id"
-            onClick={handleEditState}
-            rowData={undefined}
-          />
-        </Column>
-
-        <Column width={100}>
-          <HeaderCell>Zdjęcia</HeaderCell>
-          <ImageCell
-            dataKey="imageCount"
-            onClick={handleImageClick}
-            rowData={undefined}
-          />
-        </Column>
+        {createTextColumn(textColumnData, handleRowClick, handleChange)}
+        {crateInteractionColumns(interactionColumnData, elementFunctions)}
       </Table>
     </Panel>
   );

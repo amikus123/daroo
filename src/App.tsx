@@ -24,18 +24,20 @@ const P = styled.p`
 const App = () => {
   // data initiallly fetched from db
   const [tableData, setTableData] = useState<RowData[]>([]);
+
   // used in Item Modal
   const [selectedDbId, setSelectedDbId] = useState("");
   const [showText, setShowText] = useState(false);
   // used in  Status Modal
   // map of already fetched images
-
   const [snackbarValue, setSnackbarValue] = useState<SnackbarType>({
     show: false,
     color: "red",
     text: "",
     prevTimeoutId: null,
   });
+
+
 
   const updateSnackbar = (text: string, color: "red" | "green" = "green") => {
     // if there is no previous timeout, we set it
@@ -63,7 +65,8 @@ const App = () => {
       if (res.error) {
         updateSnackbar(res.text, "red");
       } else {
-        setTableData(addIds(res.items));
+        const arr = addIds(res.items);
+        setTableData(arr);
       }
     };
     fetch();
@@ -72,6 +75,7 @@ const App = () => {
   return (
     <CustomProvider theme="light">
       <Wrap>
+    
         <TableWrap>
           <MyTable
             tableData={tableData}
@@ -113,8 +117,9 @@ const App = () => {
           <br />
           Jezeli są prawidlowe, dane w bazie ulegaja zmianie
           <br />
-          Wartosci poł "Miejsce" i "Kategoria" nie zwracaja uwagi na wielkosc liter podczas edycji
-          <br/>
+          Wartosci poł "Miejsce" i "Kategoria" nie zwracaja uwagi na wielkosc
+          liter podczas edycji
+          <br />
           Przy zapisie do bazy rozmiar liter jest zmieniany automatycznie
           <br />
           DO DODANIA
@@ -124,7 +129,6 @@ const App = () => {
           <br />
           Nie ma tez opcji zmiany zdjec przedmiotu, nw czy ta opcja cie
           interesuje
-       
         </P>
       </Wrap>
     </CustomProvider>

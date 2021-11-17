@@ -42,11 +42,9 @@ const TextCell = ({
             }}
           />  
         ) : (
-          <>
             <span className="table-content-edit-span" title={rowData[dataKey]}>
               {rowData[dataKey]}
             </span>
-          </>
         )}
       </Cell>
     </>
