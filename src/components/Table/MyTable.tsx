@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, SortType } from "rsuite-table";
-import { PossibleColor, RowData } from "../../const/types";
+import { PossibleColor, RowData, SnackbarTexts } from "../../const/types";
 
 import { Input, Panel } from "rsuite";
 import { updateByDbId } from "../../firebase/fetch";
@@ -86,7 +86,7 @@ const MyTable = ({
           activeItem.status = activeItem.status === "NONE" ? "EDIT" : "NONE";
         }
       } else {
-        updateSnackbar("Inncorect Data", "red");
+        updateSnackbar(SnackbarTexts.wrongEditData, "red");
         // dont do the up
       }
     } else {

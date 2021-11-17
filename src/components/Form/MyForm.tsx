@@ -7,7 +7,7 @@ import {
   Button,
   InputNumber,
 } from "rsuite";
-import { BaseItem } from "../../const/types";
+import { BaseItem ,PossibleColor} from "../../const/types";
 import styled from "styled-components";
 import { addItemFromForm } from "../../firebase/fetch";
 import FileInput from "../FileInput";
@@ -47,17 +47,12 @@ const InputWrap = styled.div`
   }
 `;
 interface MyFormProps {
-  updateSnackbar: (text: string, color: "red" | "green") => void;
+  updateSnackbar: (text: string, color: PossibleColor) => void;
 }
 const MyForm = ({ updateSnackbar }: MyFormProps) => {
   const [formValue, setFormValue] = useState<BaseItem>(defaultFormValue);
-  const [files, setFiles] = useState<any>([]);
-  useEffect(() => {
-    console.log(formValue, "form");
-  }, [formValue]);
-  useEffect(() => {
-    console.log(files, "files");
-  }, [files]);
+  const [files, setFiles] = useState<File[]>([]);
+
   return (
     <MegaWrap>
       <Wrap>

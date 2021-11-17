@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getURL } from "../../firebase/fetch";
 import styled from "styled-components";
-import { propertyToDisplay, RowData } from "../../const/types";
+import { PropertyToDisplay, RowData } from "../../const/types";
 
 interface ItemModalProps {
   selectedItem: RowData | null;
@@ -103,9 +103,9 @@ const ItemModal = ({
                 {Object.keys(selectedItem)
                   .sort()
                   .map((key, index) => {
-                    return propertyToDisplay[key] ? (
+                    return PropertyToDisplay[key] ? (
                       <p key={index}>
-                        {propertyToDisplay[key]}: {selectedItem[key]}
+                        {PropertyToDisplay[key]}: {selectedItem[key]}
                       </p>
                     ) : null;
                   })}

@@ -25,11 +25,26 @@ export interface SnackbarType{
   text:string;
   prevTimeoutId : ReturnType<typeof setTimeout> | null;
 }
+// used in item modal to display data more clearly
+export enum PropertyToDisplay  {
+count="Ilość",
+location="Lokalizacja",
+name="Nazwa",
+description="Opis",
+category="Kategoria"
+}
 
-export enum propertyToDisplay  {
-"count"="Ilość",
-"location"="Lokalizacja",
-"name"="Nazwa",
-"description"="Opis",
-"category"="Kategoria"
+export enum SnackbarTexts {
+  wrongEditData="Inncorrect edit data ",
+  succesfulImageUpload = "Uploaded imgage succesfuly",
+  unsuccesfulImageUpload = "Uploaded imgage unsuccesfuly: ",
+  succesfulDbAddition = "Added item to db and uploaded files",
+  unsuccesfulDbAddition = "Failed to add item to db: ",
+  succesfulItemUpdate = "Updated item in db",
+  unsuccesfulItemUpdate = "Failed to update item in db: ",
+  // we dont have to show if succeded in fetching
+  succesfulInitialFetching = "",
+  unsuccesfulInitialFetching = "Failed to fetch initial data: ",
+
+
 }

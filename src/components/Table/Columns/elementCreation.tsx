@@ -1,13 +1,10 @@
 import { Column, HeaderCell } from "rsuite-table";
-import { RowData } from "../../../const/types";
 import EditCell from "./EditCell";
 import ImageCell from "./ImageCell";
 import {
-  InteractionOptions,
   TableElementFunctionOptions,
   MyInteractionColumnProps,
   MyTextColumnProps,
-  textColumnData,
 } from "../tableColumnData";
 import TextCell from "./TextCell";
 

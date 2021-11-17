@@ -1,5 +1,5 @@
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
-import { BaseItem, Item } from "../const/types";
+import { BaseItem, Item, SnackbarTexts } from "../const/types";
 import { db, storage } from "./main";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -18,12 +18,12 @@ const uploadImage = async (
     await uploadBytes(storageRef, file);
     return {
       error: false,
-      text: "uploaded file in form",
+      text: SnackbarTexts.succesfulImageUpload
     };
   } catch (e) {
     return {
       error: true,
-      text: e.code,
+      text:  SnackbarTexts.unsuccesfulImageUpload + e.code,
     };
   }
 };
@@ -49,12 +49,12 @@ export const addItemFromForm = async (
     );
     return {
       error: false,
-      text: "Added item to db and uploaded files",
+      text: SnackbarTexts.succesfulDbAddition
     };
   } catch (e) {
     return {
       error: true,
-      text: e.code,
+      text:  SnackbarTexts.unsuccesfulDbAddition + e.code
     };
   }
 };
@@ -78,12 +78,14 @@ export const updateByDbId = async (
     );
     return {
       error: false,
-      text: "Changed item in db",
+      text:SnackbarTexts.succesfulItemUpdate,
+
+
     };
   } catch (e) {
     return {
       error: true,
-      text: e.code,
+      text: SnackbarTexts.unsuccesfulItemUpdate + e.code,
     };
   }
 };
@@ -104,13 +106,13 @@ export const getAll = async (): Promise<FetchedItems> => {
     return {
       items,
       error: false,
-      text: "",
+      text: SnackbarTexts.succesfulInitialFetching,
     };
   } catch (e) {
     return {
       items: [],
       error: true,
-      text: e.code,
+      text: SnackbarTexts.unsuccesfulInitialFetching +  e.code,
     };
   }
 };
