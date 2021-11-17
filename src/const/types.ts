@@ -50,4 +50,5 @@ export enum SnackbarTexts {
   // we dont have to show if succeded in fetching
   succesfulInitialFetching = "",
   unsuccesfulInitialFetching = "Failed to fetch initial data: ",
+  unsuccesfulImageFetching="Failed to fetch image from storage: "
 }

@@ -3,7 +3,7 @@ import { CustomProvider } from "rsuite";
 import "rsuite-table/dist/css/rsuite-table.css";
 import MyForm from "./components/Form/MyForm";
 import MyTable from "./components/Table/MyTable";
-import { getAll } from "./firebase/fetch";
+import { getAll } from "./firebase/database/fetch";
 import styled from "styled-components";
 import ItemModal from "./components/ItemModal/ItemModal";
 import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
@@ -89,6 +89,8 @@ const App = () => {
           selectedItem={getItemWithDbId(tableData, selectedDbId)}
           setSelectedIndex={setSelectedDbId}
           showText={showText}
+          updateSnackbar={updateSnackbar}
+
         />
         <Snackbar snackbarValue={snackbarValue} />
         <MyForm updateSnackbar={updateSnackbar} />

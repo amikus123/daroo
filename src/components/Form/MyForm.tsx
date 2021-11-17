@@ -9,8 +9,8 @@ import {
 } from "rsuite";
 import { BaseItem ,PossibleColor} from "../../const/types";
 import styled from "styled-components";
-import { addItemFromForm } from "../../firebase/fetch";
 import FileInput from "./FileInput";
+import { addItemFromForm } from "../../firebase/database/form";
 
 const defaultFormValue: BaseItem = {
   location: "PP",

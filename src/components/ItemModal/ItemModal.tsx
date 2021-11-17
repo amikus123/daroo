@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { getURL } from "../../firebase/fetch";
+import { getURL } from "../../firebase/database/fetch";
 import styled from "styled-components";
-import { PropertyToDisplay, RowData } from "../../const/types";
+import { PossibleColor, PropertyToDisplay, RowData } from "../../const/types";
 
 interface ItemModalProps {
   selectedItem: RowData | null;
   setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
   showText: boolean;
+  updateSnackbar: (text: string, color: PossibleColor) => void;
 }
 
 const Overlay = styled.div`
@@ -56,6 +57,7 @@ const ItemModal = ({
   selectedItem,
   setSelectedIndex,
   showText,
+  updateSnackbar,
 }: ItemModalProps) => {
   const [urls, setUrls] = useState<string[]>([]);
   const [fetchedImages, setFetchedImages] = useState<Record<string, string>>(
@@ -63,24 +65,38 @@ const ItemModal = ({
   );
 
   useEffect(() => {
-    const setImages = async () => {
+    const getImageNames = (imageCount: number): string[] => {
       const imagesNames: string[] = [];
       for (let i = 0; i < selectedItem.imageCount; i++) {
         imagesNames.push(selectedItem.dbId + "-" + i);
       }
+      return imagesNames;
+    };
+
+    const setImages = async () => {
+      const urls = getImageNames(selectedItem.imageCount);
       const res: string[] = [];
-      for (let i = 0; i < imagesNames.length; i++) {
-        const currentimageName = imagesNames[i];
+      for (let i = 0; i < urls.length; i++) {
+        const currentimageName = urls[i];
         if (currentimageName in fetchedImages) {
+          // if we already fecthed image, we dont have to do it again
           res.push(fetchedImages[currentimageName]);
         } else {
-          const trueUrl = await getURL(currentimageName);
-          setFetchedImages({ ...fetchedImages, [currentimageName]: trueUrl });
-          res.push(trueUrl);
+          const resposne = await getURL(currentimageName);
+          if (resposne.error) {
+            updateSnackbar(resposne.text, "red");
+          } else {
+            res.push(resposne.url);
+            setFetchedImages({
+              ...fetchedImages,
+              [currentimageName]: resposne.url,
+            });
+          }
         }
       }
       setUrls(res);
     };
+
     if (selectedItem !== null) {
       setImages();
     }

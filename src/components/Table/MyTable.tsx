@@ -3,7 +3,6 @@ import { Table, SortType } from "rsuite-table";
 import { PossibleColor, RowData, SnackbarTexts } from "../../const/types";
 
 import { Input, Panel } from "rsuite";
-import { updateByDbId } from "../../firebase/fetch";
 import { getData, verifyItemChange } from "./helpers";
 import {
   textColumnData,
@@ -14,6 +13,7 @@ import {
   createTextColumn,
   crateInteractionColumns,
 } from "./Columns/elementCreation";
+import { updateByDbId } from "../../firebase/database/edit";
 interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
