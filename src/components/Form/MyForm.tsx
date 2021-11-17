@@ -10,7 +10,7 @@ import {
 import { BaseItem ,PossibleColor} from "../../const/types";
 import styled from "styled-components";
 import { addItemFromForm } from "../../firebase/fetch";
-import FileInput from "../FileInput";
+import FileInput from "./FileInput";
 
 const defaultFormValue: BaseItem = {
   location: "PP",

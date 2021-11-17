@@ -1,4 +1,4 @@
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect } from "react";
 import { CustomProvider } from "rsuite";
 import "rsuite-table/dist/css/rsuite-table.css";
 import MyForm from "./components/Form/MyForm";
@@ -9,6 +9,8 @@ import ItemModal from "./components/ItemModal/ItemModal";
 import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
+import LoginButton from "./components/Login/LoginButton";
+import { auth } from "./firebase/main";
 
 const Wrap = styled.div`
   /* position:relative; */
@@ -36,21 +38,18 @@ const App = () => {
     prevTimeoutId: null,
   });
 
-
-
-  const updateSnackbar = useCallback((text: string, color: PossibleColor = "green") => {
+  const updateSnackbar = (text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
     // else we remove it and then set it
-    if(snackbarValue.text !== ""){
-      if (snackbarValue.prevTimeoutId !== null) {
-        clearTimeout(snackbarValue.prevTimeoutId);
-      }
-      const newTimeoutId = setTimeout(() => {
-        setSnackbarValue({ ...snackbarValue, show: false, prevTimeoutId: null });
-      }, 5000);
-      setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
+    if (snackbarValue.prevTimeoutId !== null) {
+      clearTimeout(snackbarValue.prevTimeoutId);
     }
-  },[snackbarValue]);
+
+    const newTimeoutId = setTimeout(() => {
+      setSnackbarValue({ ...snackbarValue, show: false, prevTimeoutId: null });
+    }, 5000);
+    setSnackbarValue({ color, text, show: true, prevTimeoutId: newTimeoutId });
+  };
 
   // fetch initial data
   useEffect(() => {
@@ -70,13 +69,14 @@ const App = () => {
       }
     };
     fetch();
-  }, [updateSnackbar]);
+  }, []);
 
   return (
     <CustomProvider theme="light">
       <Wrap>
-      {JSON.stringify(tableData)}
+        {JSON.stringify(auth.currentUser)}
         <TableWrap>
+          <LoginButton />
           <MyTable
             tableData={tableData}
             setTableData={setTableData}

@@ -31,6 +31,7 @@ const MyTable = ({
 }: MyTableProps) => {
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<SortType>("asc");
+  // makes sure that array is not sorted while something is being edited
   const [editingCount, setEditingCount] = useState(0);
 
   // this data is modified for sorting purposes
@@ -46,8 +47,7 @@ const MyTable = ({
 
   // update shown array
   useEffect(() => {
-    // prevent change while eedidnitng
-    if (true) {
+    if (editingCount === 0) {
       setFilteredTableData(filterArray());
     }
   }, [searchedText, editingCount]);

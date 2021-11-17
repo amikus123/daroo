@@ -1,5 +1,5 @@
 import React from "react";
-import { SnackbarType } from "../../const/types";
+import { PossibleColors, SnackbarType } from "../../const/types";
 import styled from "styled-components";
 
 interface SnackbarProps {
@@ -11,12 +11,12 @@ const ContentWrap = styled.div`
   bottom: 20px;
   width: 80vw;
   min-height: 60px;
-  padding:1rem;
-  font-size:2rem;
+  padding: 1rem;
+  font-size: 2rem;
   left: 50%;
   transform: translate(-50%, 0);
-  color:white;
-`;  
+  color: white;
+`;
 
 const Overlay = styled.div`
   position: absolute;
@@ -32,14 +32,11 @@ const Overlay = styled.div`
 `;
 
 const Snackbar = ({ snackbarValue }: SnackbarProps) => {
-  enum Pog  {
-    "green"="#189306",
-    "red"="#930606"
-  }
+  const { show, color, text } = snackbarValue;
   return (
-    <Overlay style={{ visibility: snackbarValue.show?"visible":"hidden" }}>
-      <ContentWrap style={{ backgroundColor: Pog[snackbarValue.color] }}>
-        <span>{snackbarValue.text}</span>
+    <Overlay style={{ visibility: show ? "visible" : "hidden" }}>
+      <ContentWrap style={{ backgroundColor: PossibleColors[color] }}>
+        <span>{text}</span>
       </ContentWrap>
     </Overlay>
   );
