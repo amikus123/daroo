@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { Item, SnackbarTexts } from "../../const/types";
 import { myDb, myStorage } from "../main";
 import { getDownloadURL, ref } from "firebase/storage";
@@ -37,6 +37,18 @@ export const getAll = async (): Promise<FetchedItems> => {
   }
 };
 
+export const getItemById = async (id: string): Promise<Item> => {
+  try {
+    const docRef = doc(myDb, "items", id);
+    // assure item type
+    const docSnap = await getDoc(docRef);
+    const item = docSnap.data() as unknown as Item;
+    return item;
+  } catch (e) {
+    console.log("No such document!");
+  }
+};
+
 export type FetchedUrl = BaseFirestoreResposne & {
   url: string;
 };
@@ -54,7 +66,7 @@ export const getURL = async (imageName: string): Promise<FetchedUrl> => {
     return {
       error: true,
       text: SnackbarTexts.unsuccesfulImageFetching + e.code,
-      url:"",
+      url: "",
     };
   }
 };

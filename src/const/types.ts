@@ -47,6 +47,8 @@ export enum SnackbarTexts {
   unsuccesfulDbAddition = "Failed to add item to db: ",
   succesfulItemUpdate = "Updated item in db",
   unsuccesfulItemUpdate = "Failed to update item in db: ",
+  editWithoutChanges = "New data is the same as the previous one",
+
   // we dont have to show if succeded in fetching
   succesfulInitialFetching = "",
   unsuccesfulInitialFetching = "Failed to fetch initial data: ",

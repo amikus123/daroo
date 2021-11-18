@@ -80,6 +80,9 @@ const App = () => {
     <CustomProvider theme="light">
       <Wrap>
         {JSON.stringify(myAuth.currentUser)}
+        <br/>
+        {JSON.stringify(currentUser)}
+
         <TableWrap>
           <LoginButton />
           <MyTable
