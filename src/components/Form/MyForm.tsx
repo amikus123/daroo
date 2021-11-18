@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   Form,
   RadioGroup,
@@ -15,8 +15,8 @@ import { addItemFromForm } from "../../firebase/database/form";
 const defaultFormValue: BaseItem = {
   location: "PP",
   category: "odzysk",
-  name: "Płyta główna",
-  description: "płyta główna awz200",
+  name: "",
+  description: "",
   count: "1",
 };
 
@@ -29,6 +29,7 @@ const MegaWrap = styled.div`
 `;
 const Wrap = styled.div`
   display: flex;
+  margin-bottom:1rem;
   flex-direction: row;
   @media (max-width: 800px) {
     flex-direction: column;
@@ -70,7 +71,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
           </Form.Group>
 
           <Form.Group controlId="count">
-            <Form.ControlLabel>Ilosc:</Form.ControlLabel>
+            <Form.ControlLabel>Ilość:</Form.ControlLabel>
             <Form.Control name="count" accepter={InputNumber} />
           </Form.Group>
 
@@ -122,7 +123,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
             setFiles([]);
           }}
         >
-          Clear form data
+          Zresetuj formularz
         </Button>
         <Button
           onClick={async () => {
@@ -135,7 +136,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
             }
           }}
         >
-          Upload
+          Dodaj przedmiot
         </Button>
   
       </ButtonToolbar>

@@ -21,7 +21,7 @@ const EditCell = ({ rowData, dataKey, onClick, ...props }:EditCellProps) => {
           onClick(rowData.id, rowData);
         }}
       >
-        {rowData.status === "EDIT" ? "Save" : "Edit"}
+        {rowData.status === "EDIT" ? "Zapisz" : "Edytuj"}
       </Button>
     </Cell>
   );

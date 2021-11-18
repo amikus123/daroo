@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { Table, SortType } from "rsuite-table";
 import { PossibleColor, RowData, SnackbarTexts } from "../../const/types";
 
-import { Input, Panel } from "rsuite";
+import {  Panel } from "rsuite";
 import { getData, verifyItemChange } from "./helpers";
 import {
   textColumnData,
   interactionColumnData,
   TableElementFunctionOptions,
 } from "./tableColumnData";
+import TableSearchInput from "./TableSearchInput"
 import {
   createTextColumn,
   crateInteractionColumns,
@@ -22,6 +23,7 @@ interface MyTableProps {
   setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
   updateSnackbar: (text: string, color: PossibleColor) => void;
 }
+
 
 const MyTable = ({
   tableData,
@@ -135,14 +137,8 @@ const MyTable = ({
   };
 
   return (
-    <Panel header="Przedmioty" bordered bodyFill>
-      <Input
-        placeholder="Default Input"
-        value={searchedText}
-        onChange={(value) => {
-          setSearchedText(value);
-        }}
-      />
+    <Panel  bordered bodyFill>
+   <TableSearchInput searchedText={searchedText}  setSearchedText={setSearchedText}/>
 
       <Table
         virtualized

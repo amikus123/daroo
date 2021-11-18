@@ -28,9 +28,9 @@ const Label = styled.label`
   background-color: #f7f7fa;
   background-color: var(--rs-btn-default-bg);
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 1.125rem;
   line-height: 20px;
-  padding: 8 px 12 px;
+  padding: 1.25rem;
   overflow: hidden;
   position: relative;
 `;
@@ -39,7 +39,7 @@ const FileInput = ({ value, onChange }: FileInputProps) => (
   <div>
     {Boolean(value.length) && (
       <div>
-        Selected files:{" "}
+        Wybrane pliki:{" "}
         {value.map((f,index) => {
           return <span key={index}>{f.name}
           <br/>
@@ -48,7 +48,7 @@ const FileInput = ({ value, onChange }: FileInputProps) => (
       </div>
     )}
     <Label>
-      Click to select some files...
+      Kliknij by dodać pliki
       <input
         style={{ display: "none" }}
         type="file"

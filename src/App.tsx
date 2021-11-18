@@ -9,14 +9,21 @@ import ItemModal from "./components/ItemModal/ItemModal";
 import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
-import LoginButton from "./components/Login/LoginButton";
 import { UserContext } from "./context/UserContext";
 import Instructions from "./components/Instructions/Instructions";
+import AuthButtons from "./components/AuthButtons/AuthButtons";
 
-const Wrap = styled.div``;
+const Wrap = styled.div`
+display:flex;
+flex-direction:column;
+justify-content: center;
+align-items: center;
+padding:1rem;
+
+`;
 const TableWrap = styled.div`
-  margin: 0 auto;
   max-width: 1000px;
+  width: 100%;
 `;
 
 const App = () => {
@@ -71,9 +78,7 @@ const App = () => {
   return (
     <CustomProvider theme="light">
       <Wrap>
-        {currentUser ? "in" : "out"}
         <TableWrap>
-          <LoginButton />
           <MyTable
             tableData={tableData}
             setTableData={setTableData}
@@ -82,16 +87,16 @@ const App = () => {
             updateSnackbar={updateSnackbar}
           />
         </TableWrap>
+        <AuthButtons />
+        {canUserEdit ? <MyForm updateSnackbar={updateSnackbar} /> : null}
+
         <ItemModal
           selectedItem={getItemWithDbId(tableData, selectedDbId)}
           setSelectedIndex={setSelectedDbId}
           showText={showText}
           updateSnackbar={updateSnackbar}
         />
-
         <Snackbar snackbarValue={snackbarValue} />
-        {canUserEdit ? <MyForm updateSnackbar={updateSnackbar} /> : null}
-
         <Instructions />
       </Wrap>
     </CustomProvider>

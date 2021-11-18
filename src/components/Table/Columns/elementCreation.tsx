@@ -71,20 +71,3 @@ export const crateInteractionColumns = (
     );
   });
 };
-
-//
-// <Column width={80}>
-// <HeaderCell>Edit</HeaderCell>
-// <EditCell
-//   dataKey="id"
-//   onClick={handleEditState}
-//   rowData={undefined}
-// />
-// </Column>
-// <Column width={100}>
-// <HeaderCell>Zdjęcia</HeaderCell>
-// <ImageCell
-//   dataKey="imageCount"
-//   onClick={handleImageClick}
-//   rowData={undefined}
-// />

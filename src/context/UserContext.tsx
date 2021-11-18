@@ -1,9 +1,9 @@
-import { User, signInWithPopup, signOut } from "firebase/auth";
+import { User } from "firebase/auth";
 
 import { createContext, useState, useEffect } from "react";
 import { authorizedEmails } from "../const/types";
 import { login, setPersistanceToNone, signout } from "../firebase/auth";
-import { googleProvider, myAuth } from "../firebase/main";
+import {  myAuth } from "../firebase/main";
 
 
 export const UserContext = createContext(null);

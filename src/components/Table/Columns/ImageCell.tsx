@@ -19,7 +19,7 @@ const ImageCell = ({ rowData, dataKey, onClick, ...rest }: ImageCellProps) => {
           }
         }}
       >
-        {rowData.imageCount === 0 ? "No images" : `Show(${rowData.imageCount})`}
+        {rowData.imageCount === 0 ? "Brak zdjęć" : `Pokaż (${rowData.imageCount})`}
       </Button>
     </Cell>
   );

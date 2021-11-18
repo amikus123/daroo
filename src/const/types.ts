@@ -40,19 +40,18 @@ export enum PropertyToDisplay {
 }
 
 export enum SnackbarTexts {
-  wrongEditData = "Inncorrect edit data ",
-  succesfulImageUpload = "Uploaded imgage succesfuly",
-  unsuccesfulImageUpload = "Uploaded imgage unsuccesfuly: ",
-  succesfulDbAddition = "Added item to db and uploaded files",
-  unsuccesfulDbAddition = "Failed to add item to db: ",
-  succesfulItemUpdate = "Updated item in db",
-  unsuccesfulItemUpdate = "Failed to update item in db: ",
-  editWithoutChanges = "New data is the same as the previous one",
-
+  wrongEditData = "Złe dane w edytowanym przedmiocie",
+  succesfulImageUpload = "Udało się przesłać zdjęcie",
+  unsuccesfulImageUpload = "Nie dało się przesłać zdjęcia: ",
+  succesfulDbAddition = "Dodano przedmiot do bazy i przesłano zdjęcia",
+  unsuccesfulDbAddition = "Nie dodano przedmiotu do bazy: ",
+  succesfulItemUpdate = "Edytowano przedmiot w bazie",
+  unsuccesfulItemUpdate = "Nie udało sie edytować przedmiotu w bazie: ",
+  editWithoutChanges = "Nowe dane są takie same jak stare",
   // we dont have to show if succeded in fetching
   succesfulInitialFetching = "",
-  unsuccesfulInitialFetching = "Failed to fetch initial data: ",
-  unsuccesfulImageFetching="Failed to fetch image from storage: "
+  unsuccesfulInitialFetching = "Nie udało się pobrać danych z bazy: ",
+  unsuccesfulImageFetching="Nie udało się pobrać zdjęcia z bazy: "
 }
 
 // only those users can update the data
