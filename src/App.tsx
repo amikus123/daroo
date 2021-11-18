@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { CustomProvider } from "rsuite";
 import "rsuite-table/dist/css/rsuite-table.css";
 import MyForm from "./components/Form/MyForm";
@@ -10,7 +10,9 @@ import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
 import LoginButton from "./components/Login/LoginButton";
-import { auth } from "./firebase/main";
+import { myAuth } from "./firebase/main";
+import { init } from "./firebase/auth";
+import { UserContext } from "./context/UserContext";
 
 const Wrap = styled.div`
   /* position:relative; */
@@ -37,6 +39,7 @@ const App = () => {
     text: "",
     prevTimeoutId: null,
   });
+  const { currentUser } = useContext(UserContext);
 
   const updateSnackbar = (text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
@@ -60,6 +63,8 @@ const App = () => {
       return res;
     };
     const fetch = async () => {
+      await init();
+
       const res = await getAll();
       if (res.error) {
         updateSnackbar(res.text, "red");
@@ -74,7 +79,7 @@ const App = () => {
   return (
     <CustomProvider theme="light">
       <Wrap>
-        {JSON.stringify(auth.currentUser)}
+        {JSON.stringify(myAuth.currentUser)}
         <TableWrap>
           <LoginButton />
           <MyTable
@@ -90,7 +95,6 @@ const App = () => {
           setSelectedIndex={setSelectedDbId}
           showText={showText}
           updateSnackbar={updateSnackbar}
-
         />
         <Snackbar snackbarValue={snackbarValue} />
         <MyForm updateSnackbar={updateSnackbar} />

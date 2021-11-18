@@ -1,7 +1,7 @@
 import { doc, setDoc } from "firebase/firestore";
 import { BaseItem, SnackbarTexts } from "../../const/types";
 import { BaseFirestoreResposne } from "./fetch";
-import { db, storage } from "../main";
+import { myDb, myStorage } from "../main";
 import { v4 as uuidv4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 
@@ -14,7 +14,7 @@ export const addItemFromForm = async (
 ): Promise<BaseFirestoreResposne> => {
   try {
     const dbId = uuidv4();
-    const itemRef = doc(db, "items", dbId);
+    const itemRef = doc(myDb, "items", dbId);
     for (let i = 0; i < files.length; i++) {
       const res = await uploadImage(files[i], dbId + "-" + i);
       if (res.error) {
@@ -44,7 +44,7 @@ const uploadImage = async (
   fileName: string
 ): Promise<BaseFirestoreResposne> => {
   try {
-    const storageRef = ref(storage, fileName);
+    const storageRef = ref(myStorage, fileName);
     await uploadBytes(storageRef, file);
     return {
       error: false,

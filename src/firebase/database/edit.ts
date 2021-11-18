@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Item, SnackbarTexts } from "../../const/types";
 import { BaseFirestoreResposne } from "./fetch";
-import { db } from "../main";
+import { myDb } from "../main";
 import deepEqual from "deep-equal";
 
 export const updateByDbId = async (
@@ -10,7 +10,7 @@ export const updateByDbId = async (
   try {
     // check if item is the same
     const { location, category, name, description, count, dbId } = data;
-    const itemRef = doc(db, "items", dbId);
+    const itemRef = doc(myDb, "items", dbId);
     const newItem = {
       location: location.toUpperCase(),
       category: category.toLowerCase(),
@@ -20,7 +20,10 @@ export const updateByDbId = async (
     };
     const hasChanged = await checkIfItemHasChanged(dbId, newItem);
     if (hasChanged) {
+      console.log("changed")
     } else {
+      console.log("not changed")
+
     }
     await setDoc(
       itemRef,
@@ -52,7 +55,7 @@ const checkIfItemHasChanged = async (id: string, item: any) => {
 
 const getItemById = async (id: string): Promise<any> => {
   try {
-    const docRef = doc(db, "items", id);
+    const docRef = doc(myDb, "items", id);
     const docSnap = await getDoc(docRef);
     return docSnap.data();
   } catch (e) {

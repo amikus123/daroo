@@ -1,35 +1,35 @@
-import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { auth } from "./main";
-const provider = new GoogleAuthProvider();
+import {
+  signInWithPopup,
+  signOut,
+  setPersistence,
+  inMemoryPersistence,
+} from "firebase/auth";
+import { googleProvider, myAuth } from "./main";
 
-export const login = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
+export const setPersistanceToNone = async () => {
+  try {
+    await setPersistence(myAuth, inMemoryPersistence);
+    console.log("SET");
+  } catch (e) {
+    console.error("FUCK", e);
+  }
+};
+export const init = async () => {
+  await setPersistanceToNone();
 };
 
-export const signout = () => {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      // An error happened.
-    });
+export const login = async () => {
+  try {
+    return await signInWithPopup(myAuth, googleProvider);
+  } catch (e) {
+    alert("failed to login");
+  }
+};
+
+export const signout = async () => {
+  try {
+    return await signOut(myAuth);
+  } catch (e) {
+    alert("failed to login");
+  }
 };

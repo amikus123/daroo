@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import { Item, SnackbarTexts } from "../../const/types";
-import { db, storage } from "../main";
+import { myDb, myStorage } from "../main";
 import { getDownloadURL, ref } from "firebase/storage";
 
 export interface BaseFirestoreResposne {
@@ -15,7 +15,7 @@ export type FetchedItems = BaseFirestoreResposne & {
 
 export const getAll = async (): Promise<FetchedItems> => {
   try {
-    const querySnapshot = await getDocs(collection(db, "items"));
+    const querySnapshot = await getDocs(collection(myDb, "items"));
     const items: Item[] = [];
     querySnapshot.forEach((doc) => {
       const docData = doc.data() as Item;
@@ -43,7 +43,7 @@ export type FetchedUrl = BaseFirestoreResposne & {
 
 export const getURL = async (imageName: string): Promise<FetchedUrl> => {
   try {
-    const url = await getDownloadURL(ref(storage, imageName));
+    const url = await getDownloadURL(ref(myStorage, imageName));
     return {
       error: false,
       text: "",
