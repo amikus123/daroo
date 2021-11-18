@@ -10,21 +10,15 @@ import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
 import LoginButton from "./components/Login/LoginButton";
-import { myAuth } from "./firebase/main";
-import { init } from "./firebase/auth";
 import { UserContext } from "./context/UserContext";
+import Instructions from "./components/Instructions/Instructions";
 
-const Wrap = styled.div`
-  /* position:relative; */
-`;
+const Wrap = styled.div``;
 const TableWrap = styled.div`
   margin: 0 auto;
   max-width: 1000px;
 `;
-const P = styled.p`
-  margin: 0 auto;
-  padding: 2rem;
-`;
+
 const App = () => {
   // data initiallly fetched from db
   const [tableData, setTableData] = useState<RowData[]>([]);
@@ -39,7 +33,7 @@ const App = () => {
     text: "",
     prevTimeoutId: null,
   });
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, canUserEdit } = useContext(UserContext);
 
   const updateSnackbar = (text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
@@ -63,8 +57,6 @@ const App = () => {
       return res;
     };
     const fetch = async () => {
-      await init();
-
       const res = await getAll();
       if (res.error) {
         updateSnackbar(res.text, "red");
@@ -79,10 +71,7 @@ const App = () => {
   return (
     <CustomProvider theme="light">
       <Wrap>
-        {JSON.stringify(myAuth.currentUser)}
-        <br/>
-        {JSON.stringify(currentUser)}
-
+        {currentUser ? "in" : "out"}
         <TableWrap>
           <LoginButton />
           <MyTable
@@ -99,46 +88,11 @@ const App = () => {
           showText={showText}
           updateSnackbar={updateSnackbar}
         />
+
         <Snackbar snackbarValue={snackbarValue} />
-        <MyForm updateSnackbar={updateSnackbar} />
-        <P>
-          Klikniecie na nazwe kolumny sortuje wg wartosci kolumny(rosnąco albo
-          malejąco)
-          <br />
-          Kilkniecie na wartosci tabeli(gdy nie jest w trybie edycji) pokazuje
-          wartosci przedmiotu
-          <br />
-          (np gdyby "nazwa" sie nie miescila na telefonie), oraz zdjęcia
-          <br />
-          Klikniecie na wartośc z kolumny "Images" pokazuje same zdjęcia (jeśli
-          przedmiot je posiada)
-          <br />
-          TRYB EDYCJI
-          <br />
-          Klikniecie na "Edit" zmienia wartosci w pola do wpisania
-          <br />
-          Zeby wartosc zostala zmieniona, nalezy kliknac "Save" (zamkniecie
-          strony bez klikania nie zapisuje)
-          <br />
-          Po kliknieciu wartosci są sprawdzane (czy ilosc to liczba itd)
-          <br />
-          Jezeli sa nie prawidlowe, powiadamia sie komunikat
-          <br />
-          Jezeli są prawidlowe, dane w bazie ulegaja zmianie
-          <br />
-          Wartosci poł "Miejsce" i "Kategoria" nie zwracaja uwagi na wielkosc
-          liter podczas edycji
-          <br />
-          Przy zapisie do bazy rozmiar liter jest zmieniany automatycznie
-          <br />
-          DO DODANIA
-          <br />
-          Moge dodac przycisk usuwania, albo ustawic warunek usunieca(np
-          ustawienie nazwy na "")
-          <br />
-          Nie ma tez opcji zmiany zdjec przedmiotu, nw czy ta opcja cie
-          interesuje
-        </P>
+        {canUserEdit ? <MyForm updateSnackbar={updateSnackbar} /> : null}
+
+        <Instructions />
       </Wrap>
     </CustomProvider>
   );

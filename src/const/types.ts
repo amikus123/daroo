@@ -54,3 +54,6 @@ export enum SnackbarTexts {
   unsuccesfulInitialFetching = "Failed to fetch initial data: ",
   unsuccesfulImageFetching="Failed to fetch image from storage: "
 }
+
+// only those users can update the data
+export const authorizedEmails = ["amikusek123@gmail.com","darekpuzio@gmail.com"]

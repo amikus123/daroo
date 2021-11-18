@@ -30,6 +30,6 @@ export const signout = async () => {
   try {
     return await signOut(myAuth);
   } catch (e) {
-    alert("failed to login");
+    alert("failed to signout");
   }
 };

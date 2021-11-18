@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Table, SortType } from "rsuite-table";
 import { PossibleColor, RowData, SnackbarTexts } from "../../const/types";
 
@@ -14,6 +14,7 @@ import {
   crateInteractionColumns,
 } from "./Columns/elementCreation";
 import { updateByDbId } from "../../firebase/database/edit";
+import { UserContext } from "../../context/UserContext";
 interface MyTableProps {
   tableData: RowData[];
   setTableData: React.Dispatch<React.SetStateAction<RowData[]>>;
@@ -37,7 +38,8 @@ const MyTable = ({
   // this data is modified for sorting purposes
   const [filteredTableData, setFilteredTableData] = useState<RowData[]>([]);
   const [searchedText, setSearchedText] = useState("");
-
+  const {  canUserEdit } = useContext(UserContext);
+  
   // update array from the top
   useEffect(() => {
     if (editingCount === 0) {
@@ -153,7 +155,7 @@ const MyTable = ({
         {/* creates columns based on data in "tableColumnData" 
         and functions in "element creation" */}
         {createTextColumn(textColumnData, tableElementFunctions)}
-        {crateInteractionColumns(interactionColumnData, tableElementFunctions)}
+        {crateInteractionColumns(interactionColumnData, tableElementFunctions,canUserEdit)}
       </Table>
     </Panel>
   );

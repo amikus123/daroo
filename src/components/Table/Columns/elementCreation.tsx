@@ -30,7 +30,7 @@ export const createTextColumn = (
 
 export const getElementFromType = (
   item: MyInteractionColumnProps,
-  elementFunctions: TableElementFunctionOptions
+  elementFunctions: TableElementFunctionOptions,
 ) => {
   const { dataKey, type, rowData } = item;
   if (type === "edit") {
@@ -53,10 +53,16 @@ export const getElementFromType = (
 };
 export const crateInteractionColumns = (
   data: MyInteractionColumnProps[],
-  elementFunctions: TableElementFunctionOptions
+  elementFunctions: TableElementFunctionOptions,
+  canUserEdit:boolean,
+
 ) => {
   return data.map((item, index) => {
-    const { width, header } = item;
+    let { width, header,type } = item;
+    // if user can't edit, we wont even show option to do so
+    if(type ==="edit" && !canUserEdit ){
+      width = 0;
+    }
     return (
       <Column width={width} key={index}>
         <HeaderCell>{header}</HeaderCell>
