@@ -6,13 +6,14 @@ interface MyBaseColumnProps {
   width: number;
   rowData: any;
 }
-export type InteractionOptions = "edit" | "image";
+export type InteractionOptions = "edit" | "image"| "delete";
 
 export interface TableElementFunctionOptions {
   edit: (id: string, rowData: RowData) => Promise<void>;
   image: (dbId: string) => void;
   click : (dbId: string) => void;
   change: (id: string, key: string, value: any) =>void;
+  delete :(id: string) => void
 }
 export interface MyTextColumnProps extends MyBaseColumnProps {
   sortable: boolean;
@@ -34,6 +35,13 @@ export const interactionColumnData: MyInteractionColumnProps[] = [
     rowData: undefined,
     width: 100,
     type: "image",
+  },
+  {
+    dataKey: "delete",
+    header: "Usun",
+    rowData: undefined,
+    width: 100,
+    type: "delete",
   },
 ];
 export const textColumnData: MyTextColumnProps[] = [

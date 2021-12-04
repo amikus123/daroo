@@ -51,7 +51,10 @@ export enum SnackbarTexts {
   // we dont have to show if succeded in fetching
   succesfulInitialFetching = "",
   unsuccesfulInitialFetching = "Nie udało się pobrać danych z bazy: ",
-  unsuccesfulImageFetching="Nie udało się pobrać zdjęcia z bazy: "
+  unsuccesfulImageFetching="Nie udało się pobrać zdjęcia z bazy: ",
+succesfulItemDeletion="Udalo sie usunac przedmiot: ",
+unsuccesfulItemDeletion="Nie udało się usunac przedmiotu z bazy : "
+
 }
 
 // only those users can update the data

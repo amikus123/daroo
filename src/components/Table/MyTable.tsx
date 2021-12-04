@@ -14,7 +14,7 @@ import {
   createTextColumn,
   crateInteractionColumns,
 } from "./Columns/elementCreation";
-import { updateByDbId } from "../../firebase/database/edit";
+import { deleteById, updateByDbId } from "../../firebase/database/edit";
 import { UserContext } from "../../context/UserContext";
 interface MyTableProps {
   tableData: RowData[];
@@ -36,7 +36,7 @@ const MyTable = ({
   const [sortType, setSortType] = useState<SortType>("asc");
   // makes sure that array is not sorted while something is being edited
   const [editingCount, setEditingCount] = useState(0);
-
+  const [liveData,setLiveData] = useState(tableData)
   // this data is modified for sorting purposes
   const [filteredTableData, setFilteredTableData] = useState<RowData[]>([]);
   const [searchedText, setSearchedText] = useState("");
@@ -128,10 +128,23 @@ const MyTable = ({
     setShowText(false);
     setSelectedIndex(dbId);
   };
+
+  const handleDeletion = async (id:string) =>{
+    console.log("HANDLE DEL")
+    const res = await deleteById(id)
+    if (res.error) {
+      updateSnackbar(res.text, "red");
+    } else {
+      // update state
+      
+      updateSnackbar(res.text, "green");
+    }
+  }
   // object which holds all functions which can be used in table columns
   const tableElementFunctions: TableElementFunctionOptions = {
     edit: handleEditState,
     image: handleImageClick,
+    delete:handleDeletion,
     click: handleRowClick,
     change: handleChange,
   };

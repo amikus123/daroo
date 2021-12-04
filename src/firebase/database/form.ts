@@ -37,6 +37,8 @@ export const addItemFromForm = async (
       text: SnackbarTexts.unsuccesfulDbAddition + e.code,
     };
   }
+
+  
 };
 
 const uploadImage = async (

@@ -1,8 +1,9 @@
-import { doc,  setDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { Item, SnackbarTexts } from "../../const/types";
 import { BaseFirestoreResposne, getItemById } from "./fetch";
-import { myDb } from "../main";
+import { myDb, myStorage } from "../main";
 import deepEqual from "deep-equal";
+import { ref, deleteObject } from "@firebase/storage";
 
 export const updateByDbId = async (
   data: Item
@@ -46,3 +47,23 @@ const checkIfItemHasChanged = async (id: string, item: any) => {
   return !deepEqual(dbItem, item);
 };
 
+export const deleteById = async (id: string) => {
+  try {
+    const desertRef = ref(myStorage, id);
+    await deleteObject(desertRef);
+  } finally {
+    try {
+      await deleteDoc(doc(myDb, "items", id));
+
+      return {
+        error: false,
+        text: SnackbarTexts.succesfulItemDeletion,
+      };
+    } catch (e) {
+      return {
+        error: true,
+        text: SnackbarTexts.unsuccesfulItemDeletion + e.code,
+      };
+    }
+  }
+};

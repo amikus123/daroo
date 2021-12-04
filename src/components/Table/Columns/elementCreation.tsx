@@ -7,6 +7,7 @@ import {
   MyTextColumnProps,
 } from "../tableColumnData";
 import TextCell from "./TextCell";
+import DeleteCell from "./DeleteCell";
 
 export const createTextColumn = (
   data: MyTextColumnProps[],
@@ -30,7 +31,7 @@ export const createTextColumn = (
 
 export const getElementFromType = (
   item: MyInteractionColumnProps,
-  elementFunctions: TableElementFunctionOptions,
+  elementFunctions: TableElementFunctionOptions
 ) => {
   const { dataKey, type, rowData } = item;
   if (type === "edit") {
@@ -38,6 +39,14 @@ export const getElementFromType = (
       <EditCell
         dataKey={dataKey}
         onClick={elementFunctions[type]}
+        rowData={rowData}
+      />
+    );
+  } else if (type === "delete") {
+    return (
+      <DeleteCell
+        onClick={elementFunctions[type]}
+        dataKey={dataKey}
         rowData={rowData}
       />
     );
@@ -54,13 +63,12 @@ export const getElementFromType = (
 export const crateInteractionColumns = (
   data: MyInteractionColumnProps[],
   elementFunctions: TableElementFunctionOptions,
-  canUserEdit:boolean,
-
+  canUserEdit: boolean
 ) => {
   return data.map((item, index) => {
-    let { width, header,type } = item;
+    let { width, header, type } = item;
     // if user can't edit, we wont even show option to do so
-    if(type ==="edit" && !canUserEdit ){
+    if (type === "edit" && !canUserEdit) {
       width = 0;
     }
     return (
