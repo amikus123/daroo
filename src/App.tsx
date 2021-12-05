@@ -6,7 +6,13 @@ import MyTable from "./components/Table/MyTable";
 import { getAll } from "./firebase/database/fetch";
 import styled from "styled-components";
 import ItemModal from "./components/ItemModal/ItemModal";
-import { Item, PossibleColor, RowData, SnackbarType } from "./const/types";
+import {
+  BaseItem,
+  Item,
+  PossibleColor,
+  RowData,
+  SnackbarType,
+} from "./const/types";
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
 import { UserContext } from "./context/UserContext";
@@ -14,12 +20,11 @@ import Instructions from "./components/Instructions/Instructions";
 import AuthButtons from "./components/AuthButtons/AuthButtons";
 
 const Wrap = styled.div`
-display:flex;
-flex-direction:column;
-justify-content: center;
-align-items: center;
-padding:1rem;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 `;
 const TableWrap = styled.div`
   max-width: 1000px;
@@ -75,11 +80,34 @@ const App = () => {
     fetch();
   }, []);
 
+  const addToState = (
+    itemData: BaseItem & {
+      imageCount: number;
+      dbId: string;
+    }
+  ) => {
+    const newState: RowData[] = [
+      ...tableData,
+      {
+        ...itemData,
+        id: String(Date.now()),
+        status: "NONE",
+      },
+    ];
+    setTableData(newState);
+  };
+  const deleteFromState = (idToRemove: string) => {
+    const newState: RowData[] = tableData.filter(
+      (item) => item.dbId !== idToRemove
+    );
+    setTableData(newState);
+  };
   return (
     <CustomProvider theme="light">
       <Wrap>
         <TableWrap>
           <MyTable
+          deleteFromState={deleteFromState}
             tableData={tableData}
             setTableData={setTableData}
             setSelectedIndex={setSelectedDbId}
@@ -88,7 +116,9 @@ const App = () => {
           />
         </TableWrap>
         <AuthButtons />
-        {canUserEdit ? <MyForm updateSnackbar={updateSnackbar} /> : null}
+        {canUserEdit ? (
+          <MyForm addToState={addToState} updateSnackbar={updateSnackbar} />
+        ) : null}
 
         <ItemModal
           selectedItem={getItemWithDbId(tableData, selectedDbId)}

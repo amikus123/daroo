@@ -29,7 +29,7 @@ export const updateByDbId = async (
       };
     } else {
       return {
-        error: true,
+        error: false,
         text: SnackbarTexts.editWithoutChanges,
       };
     }

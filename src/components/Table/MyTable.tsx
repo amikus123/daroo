@@ -22,6 +22,7 @@ interface MyTableProps {
   setShowText: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedIndex: React.Dispatch<React.SetStateAction<string>>;
   updateSnackbar: (text: string, color: PossibleColor) => void;
+  deleteFromState:(idToRemove: string) => void
 }
 
 
@@ -31,12 +32,13 @@ const MyTable = ({
   setShowText,
   setSelectedIndex,
   updateSnackbar,
+  deleteFromState
 }: MyTableProps) => {
   const [sortColumn, setSortColumn] = useState("");
   const [sortType, setSortType] = useState<SortType>("asc");
   // makes sure that array is not sorted while something is being edited
   const [editingCount, setEditingCount] = useState(0);
-  const [liveData,setLiveData] = useState(tableData)
+
   // this data is modified for sorting purposes
   const [filteredTableData, setFilteredTableData] = useState<RowData[]>([]);
   const [searchedText, setSearchedText] = useState("");
@@ -131,12 +133,12 @@ const MyTable = ({
 
   const handleDeletion = async (id:string) =>{
     console.log("HANDLE DEL")
+    deleteFromState(id)
     const res = await deleteById(id)
     if (res.error) {
       updateSnackbar(res.text, "red");
     } else {
       // update state
-      
       updateSnackbar(res.text, "green");
     }
   }

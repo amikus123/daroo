@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import {
   Form,
   RadioGroup,
@@ -7,7 +7,7 @@ import {
   Button,
   InputNumber,
 } from "rsuite";
-import { BaseItem ,PossibleColor} from "../../const/types";
+import { BaseItem, PossibleColor } from "../../const/types";
 import styled from "styled-components";
 import FileInput from "./FileInput";
 import { addItemFromForm } from "../../firebase/database/form";
@@ -29,7 +29,7 @@ const MegaWrap = styled.div`
 `;
 const Wrap = styled.div`
   display: flex;
-  margin-bottom:1rem;
+  margin-bottom: 1rem;
   flex-direction: row;
   @media (max-width: 800px) {
     flex-direction: column;
@@ -49,8 +49,14 @@ const InputWrap = styled.div`
 `;
 interface MyFormProps {
   updateSnackbar: (text: string, color: PossibleColor) => void;
+  addToState: (
+    itemData: BaseItem & {
+      imageCount: number;
+      dbId: string;
+    }
+  ) => void;
 }
-const MyForm = ({ updateSnackbar }: MyFormProps) => {
+const MyForm = ({ updateSnackbar, addToState }: MyFormProps) => {
   const [formValue, setFormValue] = useState<BaseItem>(defaultFormValue);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -67,7 +73,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
         >
           <Form.Group controlId="name">
             <Form.ControlLabel>Nazwa:</Form.ControlLabel>
-            <Form.Control name="name" />
+            <Form.Control name="name"  />
           </Form.Group>
 
           <Form.Group controlId="count">
@@ -77,7 +83,7 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
 
           <Form.Group controlId="description">
             <Form.ControlLabel>Opis:</Form.ControlLabel>
-            <Form.Control name="description" />
+            <Form.Control name="description"  />
           </Form.Group>
         </Form>
 
@@ -128,6 +134,9 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
         <Button
           onClick={async () => {
             const res = await addItemFromForm(formValue, files);
+            if (!res.error) {
+              addToState({ ...formValue, ...res.res });
+            }
             if (res.error) {
               updateSnackbar(res.text, "red");
             } else {
@@ -138,7 +147,6 @@ const MyForm = ({ updateSnackbar }: MyFormProps) => {
         >
           Dodaj przedmiot
         </Button>
-  
       </ButtonToolbar>
     </MegaWrap>
   );

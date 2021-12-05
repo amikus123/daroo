@@ -68,7 +68,7 @@ export const crateInteractionColumns = (
   return data.map((item, index) => {
     let { width, header, type } = item;
     // if user can't edit, we wont even show option to do so
-    if (type === "edit" && !canUserEdit) {
+    if ((type === "edit" || type==="delete") && !canUserEdit) {
       width = 0;
     }
     return (

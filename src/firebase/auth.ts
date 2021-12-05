@@ -14,9 +14,6 @@ export const setPersistanceToNone = async () => {
     console.error("FUCK", e);
   }
 };
-export const init = async () => {
-  await setPersistanceToNone();
-};
 
 export const login = async () => {
   try {
