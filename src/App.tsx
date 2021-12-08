@@ -45,7 +45,7 @@ const App = () => {
     text: "",
     prevTimeoutId: null,
   });
-  const { currentUser, canUserEdit } = useContext(UserContext);
+  const {  canUserEdit } = useContext(UserContext);
 
   const updateSnackbar = (text: string, color: PossibleColor = "green") => {
     // if there is no previous timeout, we set it
@@ -127,7 +127,7 @@ const App = () => {
           updateSnackbar={updateSnackbar}
         />
         <Snackbar snackbarValue={snackbarValue} />
-        <Instructions />
+        {/* <Instructions /> */}
       </Wrap>
     </CustomProvider>
   );
