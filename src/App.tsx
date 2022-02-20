@@ -16,7 +16,6 @@ import {
 import Snackbar from "./components/Snackbar/Snackbar";
 import { getItemWithDbId } from "./components/Table/helpers";
 import { UserContext } from "./context/UserContext";
-import Instructions from "./components/Instructions/Instructions";
 import AuthButtons from "./components/AuthButtons/AuthButtons";
 
 const Wrap = styled.div`
